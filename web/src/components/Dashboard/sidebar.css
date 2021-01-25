@@ -7,6 +7,8 @@ aside.app-sidebar {
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+    left: 0px;
+    top: 0px;
 }
 
 aside.app-sidebar img {
@@ -30,7 +32,7 @@ aside.app-sidebar footer a:hover, aside.app-sidebar footer button:hover {
     background: #17D6EB;
 }
 
-aside.app-sidebar .buttons-container{
+aside.app-sidebar .buttons-container {
     display: flex;
     flex-direction: column;
 }
