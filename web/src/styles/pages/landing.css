@@ -78,3 +78,24 @@
 .content-wrapper .enter-app:hover {
     background: #96FEFF;
 }
+
+.content-wrapper .login-app {
+    position: absolute;
+    right: 0;
+    bottom: 1;
+
+    width: 80px;
+    height: 80px;
+    background: #FFF;
+    border-radius: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: background-color 0.2s;
+}
+
+.content-wrapper .login-app:hover {
+    background: #96FEFF;
+}

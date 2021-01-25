@@ -66,7 +66,7 @@ export default function CreateOrphanage() {
     images.forEach(image => {
       data.append('images', image);
     })
-    
+
    await api.post('orphanages', data);
 
    alert('Cadastro realizado com sucesso');
@@ -114,7 +114,7 @@ export default function CreateOrphanage() {
             <div className="input-block">
               <label htmlFor="about">Sobre <span>Máximo de 300 caracteres</span></label>
               <textarea
-                id="about"
+                id="name"
                 maxLength={300}
                 value={about}
                 onChange={event => setAbout(event.target.value)} />

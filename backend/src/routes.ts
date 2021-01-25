@@ -6,7 +6,7 @@ import UsersController from "./controllers/UsersController";
 
 const routes = Router();
 const upload = multer(uploadConfig);
-import authMiddleware from "./middlewares/auth.js";
+import authMiddleware from "./middlewares/auth";
 
 process.on("unhandledRejection", (err) => console.error(err));
 
@@ -16,18 +16,18 @@ process.on("unhandledRejection", (err) => console.error(err));
 // Views
 // Controllers
 
-routes.post("/register", UsersController.create);
+//Sign In, Sign Up 
 routes.post("/login", UsersController.authenticate);
-
-
 
 routes.post("/orphanages", upload.array("images"), OrphanagesController.create);
 routes.get("/orphanages/:id", OrphanagesController.show);
 routes.get("/orphanages", OrphanagesController.index);
 
-routes.get("/me", UsersController.me);
+
+// routes.use(authMiddleware);
+routes.post("/register", UsersController.create);
 routes.get("/users/:id", UsersController.show);
-routes.use(authMiddleware);
+
 
 
 

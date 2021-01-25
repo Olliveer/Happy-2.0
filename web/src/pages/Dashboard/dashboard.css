@@ -1,0 +1,10 @@
+#page-dashboard {
+    display: absolute;
+    align-items: center;
+}
+
+#page-dashboard main {
+    flex-direction: row;
+    margin-left: 150px;
+    max-width: 1200px;
+}

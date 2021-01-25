@@ -1,0 +1,78 @@
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import * as auth from '../services/auth';
+import api from '../services/api';
+
+interface User {
+    id: number;
+    name: string;
+    email: string;
+    password: string;
+    //admin: boolean;
+}
+
+interface Credentials {
+    email: string;
+    password: string;
+}
+
+interface AuthContextData {
+    signed: boolean;
+    user: User | null;
+    loading: boolean;
+    signIn(arg0: Credentials): Promise<void>;
+    signOut(): void;
+}
+
+const AuthContext = createContext<AuthContextData>({} as AuthContextData);
+
+export const AuthProvider: React.FC = ({ children }) => {
+    const [user, setUser] = useState<User | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+
+        const storageUser = localStorage.getItem('@HappyAuth:user');
+
+        if (storageUser !== null) {
+            const storageToken = localStorage.getItem('@HappyAuth:token');
+            api.defaults.headers.Authorization = `Bearer ${storageToken}`;
+            setUser(JSON.parse(storageUser));
+        }
+
+        setLoading(false);
+    }, []);
+
+    async function signIn(credentials: Credentials) {
+        const response = await auth.signIn(credentials);
+
+        if (!response.user && response.token) {
+            setUser(response.user);
+
+            api.defaults.headers.Authorization = `Bearer ${response.token}`;
+
+            // react web localStorage
+            localStorage.setItem('@HappyAuth:user', JSON.stringify(response.user));
+            localStorage.setItem('@HappyAuth:token', response.token);
+        }else {
+            console.log('erro sign in');
+        }
+    }
+
+    function signOut() {
+        auth.signOut();
+        setUser(null);
+    }
+
+
+    return (
+        <AuthContext.Provider value={{ signed: !!user, user, loading, signIn, signOut }}>
+            {children}
+        </AuthContext.Provider>
+    );
+};
+
+export function useAuth(): AuthContextData {
+    const context = useContext(AuthContext);
+
+    return context;
+}

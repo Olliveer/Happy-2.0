@@ -3,45 +3,44 @@ import User from "../models/User";
 import PasswordHash from "../utils/passwordHash";
 import usersView from "../views/users_view";
 import * as Yup from "yup";
-
-import jwt from "jsonwebtoken";
 import { getRepository } from "typeorm";
 
 export default {
-  async authenticate(req: Request, res: Response) {
-    const { email, password } = req.body;
-
-    const userRepository = getRepository(User);
-
-    const user = await userRepository.findOne({ where: { email } });
-
-    if (!user) {
-      return res.status(400).json({ error: "User not found" });
-    }
-
-    if (!(await PasswordHash.checkHash(password, user.password))) {
-      return res.status(400).json({ error: "Invalid password" });
-    }
-
-    return res.json({
-      user,
-      token: jwt.sign({ id: user.id }, "secret", {
-        expiresIn: 86400
-      }),
-    });
-  },
-
-  async me(req: Request, res: Response) {
+  async authenticate(req: Request, res: Response): Promise<Response> {
     try {
-      const { id } = req.body;
+      const { email, password } = req.body;
+
+      const schema = Yup.object().shape({
+        email: Yup.string().required(),
+        password: Yup.string().required(),
+      });
+
+      await schema.validate({
+        email, password
+      },
+        {
+          abortEarly: false,
+        }
+      );
 
       const userRepository = getRepository(User);
 
-      const user = await userRepository.findOne({ where: { id } });
+      const user = await userRepository.findOne({ where: { email } });
 
-      return res.json({ user });
+      if (!user) {
+        return res.status(400).json({ error: "User not found" });
+      }
+
+      if (!(await PasswordHash.checkHash(password, user.password))) {
+        return res.status(400).json({ error: "Invalid password" });
+      }
+
+      return res.json({
+        user: { ...user, password: undefined },
+        token: user.generateToken(),
+      });
     } catch (err) {
-      return res.status(400).json({ error: "Can't get user information" });
+      return res.status(400).json({ error: 'User authentication failed', err })
     }
   },
 
@@ -64,8 +63,6 @@ export default {
 
   async create(req: Request, res: Response) {
     const { name, email, password } = req.body;
-
-    console.log(req.body)
 
     const hashedPassword: string = await PasswordHash.hash(password);
 
@@ -93,7 +90,7 @@ export default {
       const user = await userRepository.create(data);
 
       await userRepository.save(user);
-      return res.status(201).json(user);
+      return res.status(201).json({ ...user, password: undefined });
     }
 
     return res.status(409).send({ error: "User already exists" });
