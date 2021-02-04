@@ -27,6 +27,7 @@ routes.get("/orphanages", OrphanagesController.index);
 // routes.use(authMiddleware);
 routes.post("/register", UsersController.create);
 routes.get("/users/:id", UsersController.show);
+routes.post("/orphanage/delete/:id", OrphanagesController.delete);
 
 
 

@@ -50,7 +50,7 @@ export default {
 
     const orphanageExists = await orphanagesRepository.findOne({ where: { name } });
 
-    if(orphanageExists){
+    if (orphanageExists) {
       return res.status(409).send({ error: "Orphanage already exists" });
     }
 
@@ -88,5 +88,14 @@ export default {
 
     await orphanagesRepository.save(orphanage);
     return res.status(201).json(orphanage);
+  },
+
+  async delete(req: Request, res: Response) {
+    const { id } = req.params;
+    const orphanageRepository = getRepository(Orphanage);
+
+    await orphanageRepository.delete(id);
+
+    return res.status(200).json({ message: 'Orphanage deleted' })
   },
 };

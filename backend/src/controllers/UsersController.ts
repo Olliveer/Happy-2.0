@@ -4,6 +4,7 @@ import PasswordHash from "../utils/passwordHash";
 import usersView from "../views/users_view";
 import * as Yup from "yup";
 import { getRepository } from "typeorm";
+import Orphanage from "../models/Orphanage";
 
 export default {
   async authenticate(req: Request, res: Response): Promise<Response> {
