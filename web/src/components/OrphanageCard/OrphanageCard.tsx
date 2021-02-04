@@ -46,7 +46,7 @@ export default function OrphanageCard({
           <Link to={`/dashboard/edit/${id}`}>
             <FiEdit3 size={24} color="#15C3D6" />
           </Link>
-
+      
           <Link to={`/dashboard/delete/${id}`}>
             <FiTrash size={24} color="#15C3D6" />
           </Link>

@@ -7,6 +7,7 @@ import Dashboard from '../pages/Dashboard';
 import Orphanage from '../pages/Orphanage';
 import OrphanagesMap from '../pages/OrphanagesMap';
 import Register from '../pages/Register';
+import DeleteOrphanage from '../pages/DeleteOrphanage';
 
 const AppRoutes: React.FC = () => (
     <BrowserRouter>
@@ -19,7 +20,7 @@ const AppRoutes: React.FC = () => (
             <Route path="/app" component={OrphanagesMap} />
             <Route path="/orphanages/create" component={CreateOrphanage} />
             <Route path="/orphanage/:id" component={Orphanage} />
-            {/* <Route path="/dashboard/delete/:id" component={DeleteOrphanage}/> */}
+            <Route path="/dashboard/delete/:id" component={DeleteOrphanage}/>
             {/* <Route path="/dashboard/pending" component={PendingOrphanage} /> */}
         </Switch>
     </BrowserRouter>

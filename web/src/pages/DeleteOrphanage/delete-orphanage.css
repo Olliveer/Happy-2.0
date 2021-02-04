@@ -1,0 +1,78 @@
+#page-delete-orphanage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+  
+    background-color: #ff669d;
+  }
+  
+  #page-delete-orphanage button {
+    border: 0;
+  }
+  
+  #page-delete-orphanage div.content-wrapper {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    max-height: 680px;
+  
+    width: 100%;
+    max-width: 1200px;
+  
+    background: url(../../images/deleteImg.svg) 80% center / 40% no-repeat;
+  }
+  
+  #page-delete-orphanage div.content-wrapper main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  #page-delete-orphanage div.content-wrapper main > p {
+    width: 80%;
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  
+  #page-delete-orphanage div.content-wrapper main > h1 {
+    font-size: 80px;
+    font-weight: 800;
+    line-height: 80px;
+    margin-bottom: 32px;
+  }
+  
+  #page-delete-orphanage div.content-wrapper button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 64px;
+    width: 243px;
+    padding: 10px;
+    margin-bottom: 16px;
+  
+    border-radius: 20px;
+    background-color: #d6487b;
+  
+    transition: background-color 0.5s, color 0.5s;
+    cursor: pointer;
+  
+    color: #fff;
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 25px;
+  }
+  
+  #page-delete-orphanage div.content-wrapper button:hover {
+    background-color: #d95988;
+  }
+  
+  #page-delete-orphanage div.content-wrapper button:last-of-type {
+    margin-bottom: 0;
+    background-color: #228a78;
+  }
+  
+  #page-delete-orphanage div.content-wrapper button:last-of-type:hover {
+    background-color: #29a38f;
+  }
