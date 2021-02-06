@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Sidebar from '../../components/Dashboard/Sidebar';
+import Sidebar from '../../components/Dashboard';
 
 import api from '../../services/api';
 import OrphanageCard from '../../components/OrphanageCard/OrphanageCard';

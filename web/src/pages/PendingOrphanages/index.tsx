@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Sidebar from '../../components/Dashboard/Sidebar';
+import Sidebar from '../../components/Dashboard';
 
 import api from '../../services/api';
 import OrphanageCard from '../../components/OrphanageCard/OrphanageCard';
@@ -14,7 +14,7 @@ interface Orphanage {
 
 function PendingOrphanage() {
     const [orphanages, setOrphanages] = useState<Orphanage[]>([]);
-    const pending = true;
+    const pending = true;    
 
     useEffect(() => {
         api.get('pending').then(response => {
@@ -27,7 +27,7 @@ function PendingOrphanage() {
             <Sidebar />
 
             <main className="content-wrapper">
-                <h1>Orfanatos Cadastrados</h1>
+                <h1>Orfanatos em espera</h1>
 
                 <div className="cards-wrapper">
                     {orphanages.map((orphanage) => (

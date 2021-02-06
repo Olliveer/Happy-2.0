@@ -56,7 +56,7 @@ export default function OrphanageCard({
                 <FiTrash size={24} color="#15C3D6" />
               </Link></>
           ) : (
-              <Link to={`/orphanage/${id}`}>
+              <Link to={`/dashboard/pending/${id}`}>
                 <FiArrowRight size={24} color="#15C3D6" />
               </Link>
             )}

@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import { FiClock, FiInfo, } from "react-icons/fi";
 import { FaWhatsapp } from "react-icons/fa";
 import { Map, Marker, TileLayer } from "react-leaflet";
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
 
-import '../styles/pages/orphanage.css';
-import Sidebar from "../components/Sidebar";
-import mapIcon from "../utils/mapIcon";
-import api from "../services/api";
+import './orphanage-permit.css';
+import Sidebar from "../../components/Dashboard";
+import mapIcon from "../../utils/mapIcon";
+import api from "../../services/api";
+import imgPlaceHolder from "../../images/placeHolder.svg";
 
 interface Orphanage {
   latitude: number;
@@ -28,11 +29,13 @@ interface OrphanageParams {
   id: string;
 }
 
-export default function Orphanage() {
+export default function OrphanagePermit() {
+  const history = useHistory();
   const params = useParams<OrphanageParams>();
   const [orphanage, setOrphanage] = useState<Orphanage>();
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
+  
   useEffect(() => {
     api.get(`orphanages/${params.id}`).then(response => {
       setOrphanage(response.data);
@@ -41,6 +44,18 @@ export default function Orphanage() {
 
   if (!orphanage) {
     return <p>Carregando</p>;
+  }  
+
+  async function handleAcceptSubmit() {
+  await api.put(`pending/${params.id}`).then(response => {
+      history.push('/dashboard');
+    });
+  }
+
+  async function handledeleteSubmit() {
+   await api.post(`orphanage/delete/${params.id}`).then(response => {
+      history.push('/dashboard');
+    });
   }
 
   return (
@@ -50,18 +65,17 @@ export default function Orphanage() {
       <main>
         <div className="orphanage-details">
           <img src={orphanage.images[activeImageIndex].url} alt={orphanage.name} />
-
+                    
           <div className="images">
-
             {orphanage.images.map((image, index) => {
               return (
-                <button 
-                key={image.id}
-                className={activeImageIndex === index ? 'active' : ''}
-                type="button"
-                onClick={() => {
-                  setActiveImageIndex(index);
-                }}
+                <button
+                  key={image.id}
+                  className={activeImageIndex === index ? 'active' : ''}
+                  type="button"
+                  onClick={() => {
+                    setActiveImageIndex(index);
+                  }}
                 >
                   <img src={image.url} alt={orphanage.name} />
                 </button>
@@ -127,6 +141,17 @@ export default function Orphanage() {
               <FaWhatsapp size={20} color="#FFF" />
               Entrar em contato
             </button>
+
+            <div>
+              <button type="button" onClick={handleAcceptSubmit} className="contact-button">
+                <FaWhatsapp size={20} color="#FFF" />
+              Aceitar
+            </button>
+              <button type="button" onClick={handledeleteSubmit} className="contact-button">
+                <FaWhatsapp size={20} color="#FFF" />
+              Recusar
+            </button>
+            </div>
           </div>
         </div>
       </main>
