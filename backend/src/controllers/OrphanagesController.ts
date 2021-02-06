@@ -21,11 +21,27 @@ export default {
   async index(req: Request, res: Response) {
     const orphanagesRepository = getRepository(Orphanage);
 
-    const orphanages = await orphanagesRepository.find({
-      relations: ["images"],
-    });
+    const orphanages = await orphanagesRepository.find({where: {accept: true}, 
+      relations: ["images"],});
+    
+    if(orphanages){
+      return res.json(orphanageView.renderMany(orphanages));
+    }else {
+      return res.status(204).send({ error: "There is no orphanage accepted or available" });
+    }    
+  },
 
-    return res.json(orphanageView.renderMany(orphanages));
+  async indexPending(req: Request, res: Response) {
+    const orphanagesRepository = getRepository(Orphanage);
+
+    const orphanages = await orphanagesRepository.find({where: {accept: false}, 
+      relations: ["images"],});
+    
+    if(orphanages){
+      return res.json(orphanageView.renderMany(orphanages));
+    }else {
+      return res.status(204).send({ error: "There is no orphanage accepted or available" });
+    }    
   },
 
   async create(req: Request, res: Response) {
@@ -38,8 +54,6 @@ export default {
       opening_hours,
       open_on_weekends,
     } = req.body;
-
-    console.log(req.body)
 
     const orphanagesRepository = getRepository(Orphanage);
 
@@ -62,7 +76,8 @@ export default {
       instructions,
       opening_hours,
       open_on_weekends: open_on_weekends === "true",
-      images,
+      accept: false,
+      images,      
     };
 
     const schema = Yup.object().shape({

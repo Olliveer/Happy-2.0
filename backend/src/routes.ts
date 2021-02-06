@@ -22,6 +22,7 @@ routes.post("/login", UsersController.authenticate);
 routes.post("/orphanages", upload.array("images"), OrphanagesController.create);
 routes.get("/orphanages/:id", OrphanagesController.show);
 routes.get("/orphanages", OrphanagesController.index);
+routes.get("/pending", OrphanagesController.indexPending);
 
 
 // routes.use(authMiddleware);
