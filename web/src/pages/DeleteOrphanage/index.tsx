@@ -35,8 +35,8 @@ export default function DeleteOrphanage() {
     }
 
     return (
-        <div id="delete-orphanage-page">
-            <div>
+        <div id="delete-page">
+            <div className="content">
                 <main>
                     <h1>Excluir!</h1>
                     <p>{`Você tem certeza que quer excluir ${orphanage.name}?`}</p>

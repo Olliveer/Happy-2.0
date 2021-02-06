@@ -43,7 +43,7 @@ div.card-container {
     background-color: #ebf2f5;
     border: 0;
     border-radius: 16px;
-  
+    margin-left: 8px;
     line-height: 0;
     cursor: pointer;
     transition: background-color 0.4s;
@@ -53,8 +53,7 @@ div.card-container {
   div.card-container > div:last-child a:hover {
     background-color: #ccdee5;
   }
-  
-  div.card-container > div:last-child button:first-child,
-  div.card-container > div:last-child a:first-child {
-    margin-right: 8px;
+
+  .button-review{
+    background: #228a78;
   }

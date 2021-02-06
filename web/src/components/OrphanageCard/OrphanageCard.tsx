@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Map, TileLayer, Marker } from 'react-leaflet'
-import { FiEdit3, FiTrash } from 'react-icons/fi';
+import { FiEdit3, FiTrash, FiMapPin, FiArrowRight } from 'react-icons/fi';
 
 import './orphanage-card.css';
 import mapIcon from '../../utils/mapIcon';
@@ -11,6 +11,7 @@ interface Props {
   longitude: number;
   name: string;
   id: number;
+  pending?: boolean;
 }
 
 export default function OrphanageCard({
@@ -18,6 +19,7 @@ export default function OrphanageCard({
   longitude,
   name,
   id,
+  pending,
 }: Props): JSX.Element {
   return (
     <div className="card-container">
@@ -43,13 +45,21 @@ export default function OrphanageCard({
       <div>
         <strong>{name}</strong>
         <div>
-          <Link to={`/dashboard/edit/${id}`}>
-            <FiEdit3 size={24} color="#15C3D6" />
-          </Link>
-      
-          <Link to={`/dashboard/delete/${id}`}>
-            <FiTrash size={24} color="#15C3D6" />
-          </Link>
+          {!pending ? (
+            <><Link to={`/orphanage/${id}`}>
+              <FiMapPin size={24} color="#15C3D6" />
+            </Link><Link to={`/dashboard/edit/${id}`}>
+                <FiEdit3 size={24} color="#15C3D6" />
+              </Link>
+
+              <Link to={`/dashboard/delete/${id}`}>
+                <FiTrash size={24} color="#15C3D6" />
+              </Link></>
+          ) : (
+              <Link to={`/orphanage/${id}`}>
+                <FiArrowRight size={24} color="#15C3D6" />
+              </Link>
+            )}
         </div>
       </div>
     </div>
