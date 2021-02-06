@@ -40,8 +40,22 @@ export default {
     if(orphanages){
       return res.json(orphanageView.renderMany(orphanages));
     }else {
-      return res.status(204).send({ error: "There is no orphanage accepted or available" });
+      return res.status(204).send({ error: "There is no orphanage available" });
     }    
+  },
+
+  async pending(req: Request, res: Response) {
+    const { id } = req.params;
+    const orphanagesRepository = getRepository(Orphanages);
+
+    const data = {     
+      accept: true,          
+    };
+
+    const orphanage = await orphanagesRepository.create(data);
+
+    await orphanagesRepository.update(id, orphanage);
+    return res.status(200).send({id: id, message: "Orphanage Accepted" });
   },
 
   async create(req: Request, res: Response) {

@@ -22,13 +22,16 @@ routes.post("/login", UsersController.authenticate);
 routes.post("/orphanages", upload.array("images"), OrphanagesController.create);
 routes.get("/orphanages/:id", OrphanagesController.show);
 routes.get("/orphanages", OrphanagesController.index);
-routes.get("/pending", OrphanagesController.indexPending);
+
 
 
 // routes.use(authMiddleware);
 routes.post("/register", UsersController.create);
 routes.get("/users/:id", UsersController.show);
 routes.post("/orphanage/delete/:id", OrphanagesController.delete);
+routes.get("/pending", OrphanagesController.indexPending);
+routes.put("/pending/:id", OrphanagesController.pending);
+
 
 
 
