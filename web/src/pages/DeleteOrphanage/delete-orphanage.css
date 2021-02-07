@@ -55,6 +55,7 @@
   font-size: 18px;
   font-weight: 800;
   line-height: 25px;
+  outline: none;
 }
 
 #delete-page div.content button:hover {

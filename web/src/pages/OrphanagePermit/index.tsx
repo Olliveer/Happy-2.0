@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FiClock, FiInfo, } from "react-icons/fi";
-import { FaWhatsapp } from "react-icons/fa";
+import { FiClock, FiInfo,FiXCircle,FiCheckCircle } from "react-icons/fi";
 import { Map, Marker, TileLayer } from "react-leaflet";
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -135,24 +134,18 @@ export default function OrphanagePermit() {
                 fim de semana
                   </div>
                 )}
-            </div>
-
-            <button type="button" className="contact-button">
-              <FaWhatsapp size={20} color="#FFF" />
-              Entrar em contato
-            </button>
-
-            <div>
-              <button type="button" onClick={handleAcceptSubmit} className="contact-button">
-                <FaWhatsapp size={20} color="#FFF" />
+            </div>            
+          </div>
+          <div className="buttons-container">
+              <button type="button" onClick={handleAcceptSubmit} className="accept-button">
+                <FiCheckCircle size={20} color="#FFF" />
               Aceitar
             </button>
-              <button type="button" onClick={handledeleteSubmit} className="contact-button">
-                <FaWhatsapp size={20} color="#FFF" />
+              <button type="button" onClick={handledeleteSubmit} className="reject-button">
+                <FiXCircle size={20} color="#FFF" />
               Recusar
             </button>
             </div>
-          </div>
         </div>
       </main>
     </div>

@@ -11,7 +11,9 @@ export default function Sidebar() {
 
     return (
         <aside className="app-sidebar">
+            <Link to="/">
             <img src={mapMarkerImg} alt="Happy" />
+            </Link>
             <div>
             <Link to="/dashboard/users" className="button-users">
                 <FiUser size={24} color="#FFF" />

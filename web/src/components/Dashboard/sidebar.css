@@ -67,14 +67,14 @@ aside.app-sidebar .buttons-container {
 }
 
 .button-pending:hover {
-    background: #17D6EB;
+    background: #8a3453;
 }
 
 .button-users {
     width: 48px;
     height: 48px;
     border: 0;
-    background: #228a78;
+    background: #29945f;
     border-radius: 16px;
     display: flex;
     justify-content: center;
@@ -83,5 +83,5 @@ aside.app-sidebar .buttons-container {
 }
 
 .button-users:hover {
-    background: #17D6EB;
+    background: #3CDC8C;
 }
