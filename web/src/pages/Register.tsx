@@ -1,11 +1,9 @@
 import React, { FormEvent, useState } from "react";
 import { useHistory } from "react-router-dom";
 
-import { FiPlus } from "react-icons/fi";
 
 import '../styles/pages/create-orphanage.css';
 import Sidebar from "../components/Sidebar";
-import api from "../services/api";
 
 
 

@@ -2,25 +2,39 @@ import React, { useEffect, useState } from 'react';
 import Sidebar from '../../components/Dashboard';
 
 import api from '../../services/api';
-import OrphanageCard from '../../components/OrphanageCard/OrphanageCard';
 import './dashboard.css';
+import { Map, Marker, TileLayer } from 'react-leaflet';
+import { Link } from 'react-router-dom';
+import { FiEdit3, FiMapPin, FiTrash } from 'react-icons/fi';
+import mapIcon from '../../utils/mapIcon';
 
-interface Orphanage {
-    id: number;
-    latitude: number;
-    longitude: number;
-    name: string;
+export interface IOrphanageImages {
+    id?: number;
+    url?: string;
+    link?: string;
 }
 
-function Dashboard() {
-    const [orphanages, setOrphanages] = useState<Orphanage[]>([]);
+export interface IOrphanage {
+    id: string;
+    name: string;
+    latitude: number;
+    longitude: number;
+    about: string;
+    instructions: string;
+    opening_hours: string;
+    open_on_weekends: boolean;
+    accept?: boolean;
+    images: IOrphanageImages[];
+}
+
+const Dashboard: React.FC = () => {
+    const [orphanages, setOrphanages] = useState<IOrphanage[]>([]);
 
     useEffect(() => {
         api.get('orphanages').then(response => {
             setOrphanages(response.data);
         })
     }, []);
-
 
     return (
         <div id="page-dashboard">
@@ -30,14 +44,43 @@ function Dashboard() {
                 <h1>Orfanatos Cadastrados</h1>
 
                 <div className="cards-wrapper">
-                    {orphanages.map((orphanage) => (
-                        <OrphanageCard
-                            key={orphanage.id}
-                            latitude={orphanage.latitude}
-                            longitude={orphanage.longitude}
-                            name={orphanage.name}
-                            id={orphanage.id}
-                        />
+                    {orphanages?.map((orphanage) => (
+                        <div className="card-container" key={orphanage.id}>
+                            <Map
+                                className="map"
+                                center={[orphanage.latitude, orphanage.longitude]}
+                                zoom={16}
+                                style={{ width: '100%', height: '100%' }}
+                                dragging={false}
+                                touchZoom={false}
+                                zoomControl={false}
+                                scrollWheelZoom={false}
+                                doubleClickZoom={false}
+                            >
+                                <TileLayer
+                                    url={`https://api.mapbox.com/styles/v1/mapbox/light-v10/tiles/256/{z}/{x}/{y}@2x?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`}
+                                />
+                                <Marker
+                                    interactive={false}
+                                    icon={mapIcon}
+                                    position={[orphanage.latitude, orphanage.longitude]}
+                                />
+                            </Map>
+                            <div>
+                                <strong>{orphanage.name}</strong>
+                                <div>
+                                    <Link to={`/orphanage/${orphanage.id}`}>
+                                        <FiMapPin size={24} color="#15C3D6" />
+                                    </Link>
+                                    <Link to={{ pathname: '/dashboard/edit', state: { orphanage } }}                                    >
+                                        <FiEdit3 size={20} color="#15C3D6" />
+                                    </Link>
+                                    <Link to={`/dashboard/delete/${orphanage.id}`}>
+                                        <FiTrash size={20} color="#ff9e9e" />
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
                     ))}
                 </div>
             </main>

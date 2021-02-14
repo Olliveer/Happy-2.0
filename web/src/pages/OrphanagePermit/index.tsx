@@ -8,7 +8,6 @@ import './orphanage-permit.css';
 import Sidebar from "../../components/Dashboard";
 import mapIcon from "../../utils/mapIcon";
 import api from "../../services/api";
-import imgPlaceHolder from "../../images/placeHolder.svg";
 
 interface Orphanage {
   latitude: number;

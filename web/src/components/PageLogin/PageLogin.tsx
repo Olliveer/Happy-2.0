@@ -7,7 +7,7 @@ import LogoLogin from '../../images/logoHappy.svg';
 function PageLogin() {
     return (
         <aside className="page-login">
-            <img src={LogoLogin} />
+            <img src={LogoLogin} alt="Happy" />
 
             <div className="location">
                 <strong>Curitiba</strong>

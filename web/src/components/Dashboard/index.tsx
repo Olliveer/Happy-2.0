@@ -1,12 +1,11 @@
 import React from 'react';
 import { FiPower, FiMapPin, FiAlertCircle, FiUser } from 'react-icons/fi';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import './sidebar.css';
 import mapMarkerImg from '../../images/map-marker.svg';
 import { useAuth } from '../../contexts/auth';
 
 export default function Sidebar() {
-    // const { goBack } = useHistory();
     const { signOut } = useAuth();
 
     return (

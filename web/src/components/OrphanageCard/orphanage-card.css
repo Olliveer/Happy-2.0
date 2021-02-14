@@ -1,4 +1,4 @@
-div.card-container {
+div.card {
     display: flex;
     flex-direction: column;
     width: 544px;
@@ -9,17 +9,17 @@ div.card-container {
     overflow: hidden;
   }
   
-  div.card-container:nth-child(2n-1) {
+  div.card:nth-child(2n-1) {
     margin-right: 2rem;
   }
   
-  div.card-container .leaflet-container {
+  div.card .leaflet-container {
     width: 100%;
     background-color: #aaa;
     height: 225px;
   }
   
-  div.card-container > div:last-child {
+  div.card > div:last-child {
     background-color: #fff;
     flex: 1;
     display: flex;
@@ -28,15 +28,15 @@ div.card-container {
     padding: 0 2rem;
   }
   
-  div.card-container > div:last-child strong {
+  div.card > div:last-child strong {
     color: #4d6f80;
     font-size: 24px;
     line-height: 34px;
     font-weight: 700;
   }
   
-  div.card-container > div:last-child button,
-  div.card-container > div:last-child a {
+  div.card > div:last-child button,
+  div.card > div:last-child a {
     display: inline-block;
   
     padding: 12px;
@@ -49,8 +49,8 @@ div.card-container {
     transition: background-color 0.4s;
   }
   
-  div.card-container > div:last-child button:hover,
-  div.card-container > div:last-child a:hover {
+  div.card > div:last-child button:hover,
+  div.card > div:last-child a:hover {
     background-color: #ccdee5;
   }
 

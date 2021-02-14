@@ -42,7 +42,7 @@ export default function DeleteOrphanage() {
                     <p>{`Você tem certeza que quer excluir ${orphanage.name}?`}</p>
                     <button type="button" onClick={handledeleteSubmit}>
                         Sim!
-                </button>
+                    </button>
                     <button type="button" onClick={goBack}>
                         Voltar para o dashboard
                 </button>

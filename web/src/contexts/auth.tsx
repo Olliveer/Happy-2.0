@@ -1,6 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import * as auth from '../services/auth';
-import api from '../services/api';
 
 //VERIFICAR O USER QUE VEM DO BACKEND
 

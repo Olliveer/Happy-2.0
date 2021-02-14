@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Map, TileLayer, Marker } from 'react-leaflet'
-import { FiEdit3, FiTrash, FiMapPin, FiArrowRight } from 'react-icons/fi';
+import { FiTrash, FiMapPin, FiArrowRight } from 'react-icons/fi';
 
 import './orphanage-card.css';
 import mapIcon from '../../utils/mapIcon';
@@ -19,10 +19,10 @@ export default function OrphanageCard({
   longitude,
   name,
   id,
-  pending,
+  pending
 }: Props): JSX.Element {
   return (
-    <div className="card-container">
+    <div className="card">
       <Map
         center={[latitude, longitude]}
         zoom={16}
@@ -48,13 +48,15 @@ export default function OrphanageCard({
           {!pending ? (
             <><Link to={`/orphanage/${id}`}>
               <FiMapPin size={24} color="#15C3D6" />
-            </Link><Link to={`/dashboard/edit/${id}`}>
+            </Link>
+              {/* <Link to={{ pathname: '/dashboard/edit', state: `{ ${orphanage} }` }}>
                 <FiEdit3 size={24} color="#15C3D6" />
-              </Link>
+              </Link> */}
 
               <Link to={`/dashboard/delete/${id}`}>
                 <FiTrash size={24} color="#15C3D6" />
-              </Link></>
+              </Link>
+            </>
           ) : (
               <Link to={`/dashboard/pending/${id}`}>
                 <FiArrowRight size={24} color="#15C3D6" />

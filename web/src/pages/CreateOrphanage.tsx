@@ -23,6 +23,10 @@ export default function CreateOrphanage() {
   const [open_on_weekends, setOpenOnWeekends] = useState(true);
   const [images, setImages] = useState<File[]>([]);
   const [previewImages, setPreviewImages] = useState<string[]>([]);
+  // const [previewImages, setPreviewImages] = useState<IOrphanageImages[]>(
+  //   orphanage.images
+  // );
+  // const [removeImage, setRemoveImage] = useState<IOrphanageImages[]>([]);
 
   function handleMapClick(event: LeafletMouseEvent) {
     const { lat, lng } = event.latlng;
