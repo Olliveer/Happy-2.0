@@ -1,5 +1,6 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import Orphanage from "../models/Orphanage";
+import Image from "../models/Image";
 import orphanageView from "../views/orphanages_view";
 import * as Yup from "yup";
 
@@ -21,41 +22,43 @@ export default {
   async index(req: Request, res: Response) {
     const orphanagesRepository = getRepository(Orphanage);
 
-    const orphanages = await orphanagesRepository.find({where: {accept: true}, 
-      relations: ["images"],});
-    
-    if(orphanages){
+    const orphanages = await orphanagesRepository.find({
+      where: { accept: true },
+      relations: ["images"],
+    });
+
+    if (orphanages) {
       return res.json(orphanageView.renderMany(orphanages));
-    }else {
+    } else {
       return res.status(204).send({ error: "There is no orphanage accepted or available" });
-    }    
+    }
   },
 
   async indexPending(req: Request, res: Response) {
     const orphanagesRepository = getRepository(Orphanage);
 
-    const orphanages = await orphanagesRepository.find({where: {accept: false}, 
-      relations: ["images"],});
-    
-    if(orphanages){
+    const orphanages = await orphanagesRepository.find({
+      where: { accept: false },
+      relations: ["images"],
+    });
+
+    if (orphanages) {
       return res.json(orphanageView.renderMany(orphanages));
-    }else {
+    } else {
       return res.status(204).send({ error: "There is no orphanage available" });
-    }    
+    }
   },
 
   async pending(req: Request, res: Response) {
     const { id } = req.params;
     const orphanagesRepository = getRepository(Orphanages);
 
-    const data = {     
-      accept: true,          
+    const data = {
+      accept: true,
     };
 
-    const orphanage = await orphanagesRepository.create(data);
-
-    await orphanagesRepository.update(id, orphanage);
-    return res.status(200).send({id: id, message: "Orphanage Accepted" });
+    await orphanagesRepository.update(id, data);
+    return res.status(200).send({ id: id, message: "Orphanage Accepted" });
   },
 
   async create(req: Request, res: Response) {
@@ -91,7 +94,7 @@ export default {
       opening_hours,
       open_on_weekends: open_on_weekends === "true",
       accept: false,
-      images,      
+      images,
     };
 
     const schema = Yup.object().shape({
@@ -117,6 +120,68 @@ export default {
 
     await orphanagesRepository.save(orphanage);
     return res.status(201).json(orphanage);
+  },
+
+  async update(req: Request, res: Response, next: NextFunction) {
+    const {
+      id,
+      name,
+      latitude,
+      longitude,
+      about,
+      instructions,
+      opening_hours,
+      open_on_weekends,
+      accept,
+      id_images_remove,
+    } = req.body;
+
+    console.log(req.body);
+
+    const orphanagesRepository = getRepository(Orphanage);
+    const imageRepository = getRepository(Image);
+
+    // delete images 
+    if (id_images_remove) {
+      const images_keys = Array.isArray(id_images_remove)
+        ? id_images_remove
+        : Array(id_images_remove);
+
+      images_keys.forEach(async (image) => {
+        await imageRepository.delete(image);
+      });
+    }
+
+    //new images
+    const requestImages = req.files as Express.Multer.File[];
+    if (requestImages) {
+      requestImages.forEach(async (image) => {
+        const img = imageRepository.create({
+          path: image.filename,
+          orphanage: id,
+        });
+        await imageRepository.save(img);
+      });
+    }
+
+    // Update only data
+    await orphanagesRepository.update(
+      { id },
+      {
+        name,
+        latitude,
+        longitude,
+        about,
+        instructions,
+        opening_hours,
+        open_on_weekends: open_on_weekends === 'true',
+        accept: accept === true,
+      }
+    );
+
+    return res
+      .status(204)
+      .json({ message: 'Orphanage updated.' });
   },
 
   async delete(req: Request, res: Response) {

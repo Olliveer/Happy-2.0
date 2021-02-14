@@ -31,6 +31,7 @@ routes.get("/users/:id", UsersController.show);
 routes.post("/orphanage/delete/:id", OrphanagesController.delete);
 routes.get("/pending", OrphanagesController.indexPending);
 routes.put("/pending/:id", OrphanagesController.pending);
+routes.put("/orphanage/edit", upload.array("images"), OrphanagesController.update);
 
 
 
