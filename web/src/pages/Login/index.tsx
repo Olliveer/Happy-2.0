@@ -1,5 +1,6 @@
 import React, { FormEvent, useState } from 'react';
 import { FiArrowLeft } from 'react-icons/fi';
+import ToastAnimated, { showToast } from '../../utils/Toast/toast';
 import { Link, useHistory } from 'react-router-dom';
 import SideLogin from '../../components/PageLogin/PageLogin';
 import { useAuth } from '../../contexts/auth';
@@ -12,25 +13,34 @@ function SignIn() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [remindMe, setRemindMe] = useState(true);
+    const [remindMe, setRemindMe] = useState(false);
+    const [loading, setLoading] = useState(false);
+    // const notify = () =>
+    // showToast({ type: "success", message: err.response.data.error });
 
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
 
-        signIn(email, password);
+        signIn(email, password).catch((err) => showToast({ type: "error", message: err.response.data.error }));
     }
 
     return (
         <div id="login-page">
-            <SideLogin />
+            <ToastAnimated />
+            <SideLogin />           
 
             <aside className="form-box">
+            
                 <form onSubmit={handleSubmit} className="login-form">
                     <fieldset>
                         <legend>Fazer login</legend>
                         <div className="input-block">
                             <label htmlFor="email">E-mail</label>
                             <input
+                                style={
+                                    email ? { borderColor: '#A1E9C5' } : { borderColor: '#D3E2E5' }
+                                }
+                                type="email"
                                 id="email"
                                 value={email}
                                 onChange={event => setEmail(event.target.value)} />
@@ -39,21 +49,25 @@ function SignIn() {
                         <div className="input-block">
                             <label htmlFor="password">Senha</label>
                             <input
+                                style={
+                                    password
+                                        ? { borderColor: '#A1E9C5' }
+                                        : { borderColor: '#D3E2E5' }
+                                }
                                 id="password"
                                 value={password}
                                 type="password"
                                 onChange={event => setPassword(event.target.value)} />
                         </div>
-                        <div className="remember-me">
-                            <input id="checkbox" type="checkbox" name="checked"></input>
-                            <label htmlFor="remember">Lembrar-me</label>
-
-                            <Link to="/recover" className="forgot-password">
-                                Esqueci a senha
-							</Link>
-                        </div>
-
                     </fieldset>
+                    <div className="remember-me">
+                        <input id="checkbox" type="checkbox" onClick={() => setRemindMe(!remindMe)}></input>
+                        <label htmlFor="remember">Lembrar-me</label>
+
+                        <Link to="/recover" className="forgot-password">
+                            Esqueci a senha
+						</Link>
+                    </div>
 
                     <button disabled={false} className="confirm-button" type="submit">
                         Entrar

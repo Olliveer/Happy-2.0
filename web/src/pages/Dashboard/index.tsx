@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../../components/Dashboard';
-
+import ToastAnimated, { showToast } from '../../utils/Toast/toast';
 import api from '../../services/api';
 import './dashboard.css';
 import { Map, Marker, TileLayer } from 'react-leaflet';
@@ -29,21 +29,24 @@ export interface IOrphanage {
 
 const Dashboard: React.FC = () => {
     const [orphanages, setOrphanages] = useState<IOrphanage[]>([]);
-
+    // const notify = () =>
+    // showToast({ type: "success", message: `Bem vindo` });
+    
     useEffect(() => {
         api.get('orphanages').then(response => {
             setOrphanages(response.data);
-        })
+        })        
     }, []);
 
     return (
         <div id="page-dashboard">
             <Sidebar />
-
+            <ToastAnimated />
             <main className="content-wrapper">
                 <h1>Orfanatos Cadastrados</h1>
 
                 <div className="cards-wrapper">
+                    
                     {orphanages?.map((orphanage) => (
                         <div className="card-container" key={orphanage.id}>
                             <Map

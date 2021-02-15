@@ -17,6 +17,14 @@ import * as auth from '../services/auth';
 //     password: string;
 // }
 
+interface IDecodeJWToken {
+    email: string;
+    exp: number;
+    iat: number;
+    id: number;
+    name: string;
+  }
+
 interface AuthContextData {
     signed: boolean;
     // user: User | null;
@@ -26,13 +34,14 @@ interface AuthContextData {
     signOut(): void;
 }
 
+
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export const AuthProvider: React.FC = ({ children }) => {
     // const [user, setUser] = useState<User | null>(null);
     const [token, setToken] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
-    
+
 
     useEffect(() => {
         // const storageUser = localStorage.getItem('@RNAuth:user');
@@ -41,23 +50,23 @@ export const AuthProvider: React.FC = ({ children }) => {
         if (storageToken) {
             // api.defaults.headers.Authorization = `Bearer ${storageToken}`;
             setToken(storageToken);
-            setLoading(false);
         }
 
+        setLoading(false);
     }, []);
 
-    async function signIn(username: string, password:string) {
+    async function signIn(username: string, password: string) {
         const response = await auth.SignInService(username, password);
-    
+
         console.log('Response data ' + response.data.token);
         setToken(response.data.token);
-    
+
         localStorage.setItem('web:token', response.data.token);
-      }
+    }
 
     function signOut() {
+        auth.signOut();
         setToken(null);
-        localStorage.removeItem('web:token');
     }
 
 

@@ -14,8 +14,8 @@ import api from "../services/api";
 
 export default function CreateOrphanage() {
   const history = useHistory();
-  const [position, setPosition] = useState({ latitude: 0, longitude: 0 });
 
+  const [position, setPosition] = useState({ latitude: 0, longitude: 0 });
   const [name, setName] = useState('');
   const [about, setAbout] = useState('');
   const [instructions, setInstructions] = useState('');
@@ -23,10 +23,6 @@ export default function CreateOrphanage() {
   const [open_on_weekends, setOpenOnWeekends] = useState(true);
   const [images, setImages] = useState<File[]>([]);
   const [previewImages, setPreviewImages] = useState<string[]>([]);
-  // const [previewImages, setPreviewImages] = useState<IOrphanageImages[]>(
-  //   orphanage.images
-  // );
-  // const [removeImage, setRemoveImage] = useState<IOrphanageImages[]>([]);
 
   function handleMapClick(event: LeafletMouseEvent) {
     const { lat, lng } = event.latlng;
@@ -72,8 +68,7 @@ export default function CreateOrphanage() {
     })
 
    await api.post('orphanages', data);
-
-   alert('Cadastro realizado com sucesso');
+   
    history.push('/app');
 
   }
