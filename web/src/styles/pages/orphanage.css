@@ -74,7 +74,7 @@
 
 .orphanage-details .orphanage-details-content .map-container {
   margin-top: 64px;
-  background: #E6F7FB;
+  background: #FFF;
   border: 1px solid #B3DAE2;
   border-radius: 20px;
 }
@@ -93,6 +93,7 @@
 .orphanage-details .orphanage-details-content .map-container .leaflet-container {
   border-bottom: 1px solid #DDE3F0;
   border-radius: 20px;
+  background: #FFFFFF;
 }
 
 .orphanage-details .orphanage-details-content hr {
@@ -172,3 +173,4 @@
 .orphanage-details .orphanage-details-content button.contact-button:hover {
   background: #36CF82;
 }
+

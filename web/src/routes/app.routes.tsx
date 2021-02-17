@@ -11,6 +11,7 @@ import DeleteOrphanage from '../pages/DeleteOrphanage';
 import PendingOrphanage from '../pages/PendingOrphanages';
 import OrphanagePermit from '../pages/OrphanagePermit';
 import EditOrphanage from '../pages/EditOrphanage';
+import Users from '../pages/Users';
 
 const AppRoutes: React.FC = () => (
     <BrowserRouter>
@@ -19,7 +20,7 @@ const AppRoutes: React.FC = () => (
             <Redirect from="/login" to="/dashboard" />
             {/* <Redirect from="/app" to="/dashboard" /> */}
             <Route path="/dashboard" exact component={Dashboard} />
-            <Route path="/user/create" component={Register} />
+            <Route path="/dashboard/user/create" component={Register} />
             <Route path="/app" component={OrphanagesMap} />
             <Route path="/orphanages/create" component={CreateOrphanage} />
             <Route path="/orphanage/:id" component={Orphanage} />
@@ -27,6 +28,7 @@ const AppRoutes: React.FC = () => (
             <Route path="/orphanages/pending" component={PendingOrphanage}/>
             <Route path="/dashboard/pending/:id" component={OrphanagePermit} />
             <Route path="/dashboard/edit" component={EditOrphanage} />
+            <Route path="/dashboard/users" component={Users} />
         </Switch>
     </BrowserRouter>
 );

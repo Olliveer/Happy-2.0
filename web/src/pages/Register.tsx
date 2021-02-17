@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 
 
 import '../styles/pages/create-orphanage.css';
-import Sidebar from "../components/Sidebar";
+import Sidebar from "../components/Dashboard";
 
 
 
