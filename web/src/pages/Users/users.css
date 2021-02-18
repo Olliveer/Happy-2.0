@@ -61,9 +61,9 @@
     padding: 1rem 2rem;
   }
   
-  #page-users div.card-container > div:last-child strong {
+  #page-users div.card-container > div:last-child p {
     color: #4d6f80;
-    font-size: 24px;
+    font-size: 18px;
     line-height: 34px;
     font-weight: 700;
   }
@@ -100,7 +100,7 @@
 }
 
 .button-register {
-    position: absolute;
+    position: fixed;
     right: 40px;
     bottom: 40px;
     z-index: 10;

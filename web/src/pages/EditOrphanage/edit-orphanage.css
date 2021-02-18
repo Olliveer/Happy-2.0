@@ -20,6 +20,7 @@ form.edit-orphanage-form .leaflet-container {
   margin-bottom: 40px;
   border: 1px solid #D3E2E5;
   border-radius: 20px;
+  background: #FFF;
 }
 
 form.edit-orphanage-form fieldset {

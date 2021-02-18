@@ -28,10 +28,6 @@ function User() {
         })
     }, []);
 
-    async function handledeleteSubmit() {
-
-    }
-
     const delAlert = (id: string) => {
         swal({
             title: 'Deletar usuário',
@@ -41,7 +37,9 @@ function User() {
         }).then(res => {
             if (res) {
                 api.post(`user/delete/${id}`).then(response => {
-                    history.push('/dashboard/users');
+                    setTimeout(() => {
+                        history.go(0);
+                    }, 2500)                    
                 });
                 swal({ text: 'Usuário deletado com sucesso', icon: 'success', timer: 2000 })
             } else {
@@ -68,8 +66,8 @@ function User() {
                                 <img src={placeHolder} alt="user-img" />
                             </div>
                             <div>
-                                <strong>{user.name}</strong>
-                                <strong>{user.email}</strong>
+                                <p>{user.name}</p>
+                                <p>{user.email}</p>
                                 <div>
                                     <Link to={{ pathname: '/dashboard/users/edit', state: { user } }}                                    >
                                         <FiEdit3 size={20} color="#15C3D6" />
@@ -82,11 +80,10 @@ function User() {
                         </div>
                     ))}
                 </div>
-                              
             </main>
             <Link to="/dashboard/user/create" className="button-register">
-                    <FiPlus size={32} color="#FFF" />
-            </Link> 
+                <FiPlus size={32} color="#FFF" />
+            </Link>
         </div>
     );
 }

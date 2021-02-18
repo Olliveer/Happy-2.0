@@ -42,6 +42,7 @@
 
 #page-map .leaflet-container {
     z-index: 5;
+    background: #FFF;
 }
 
 #page-map .create-orphanage {
