@@ -20,7 +20,7 @@ export default function Register() {
 
 
 
-    function handleSubmit(event: FormEvent) {
+   async function handleSubmit(event: FormEvent) {
         event.preventDefault();
 
         if (password === re_password) {
@@ -29,8 +29,8 @@ export default function Register() {
                 email: email,
                 password: password
             }
-            // console.log(api.post('register', data).then(msg => alert(msg.data.msg)).catch(err => alert(err.response.data.error)));
-            api.post('register', data).then(msg => {
+            
+          await api.post('register', data).then(msg => {
                 console.log(msg.data.msg);
                 showToast({ type: "success", message: msg.data.msg })
                 setTimeout(() => {
@@ -50,44 +50,8 @@ export default function Register() {
             history.push('/dashboard/user/create');
             notify();
         }
-
-
-
-        // alert('Cadastro realizado com sucesso');
-        // history.push('/app');
-
     }
-
-    // function handleSubmit(e: FormEvent) {
-    //     e.preventDefault();
-    // const data = {
-    //     name: name,
-    //     email: email,
-    //     password: password,
-    //     re_password: re_password
-    // };
-
-    //     fetch('http://localhost:3333/register', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-type': 'application/json',
-    //         },
-    //         body: JSON.stringify(data),
-    //     }).then(response => {
-    //         if (!response.ok) {
-    //             alert('User already registered');
-    //             history.push('/user/create');
-    //         }
-    //         alert('Successfully registered')
-    //         history.push('/dashboard/users');
-    //         return response.json()
-    //     })
-    //         .then(user => {
-    //             console.log(user)
-    //         })
-
-    // }
-
+    
     return (
         <div id="page-create-user">
             <Sidebar />
