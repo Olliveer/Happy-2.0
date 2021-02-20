@@ -5,11 +5,11 @@ export default {
     return {
       id: user.id,
       name: user.name,
-      email: user.email,
+      email: user.email
     };
   },
 
-  // renderMany(users: Users[]) {
-  //     return users.map((users) => this.render(users));
-  // },
+  renderMany(users: User[]) {
+      return users.map((users) => this.render(users));
+  },
 };

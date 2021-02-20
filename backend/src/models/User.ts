@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, BeforeUpdate, AfterLoad, BeforeInsert, InsertEvent, UpdateEvent } from "typeorm";
+import PasswordHash from "../utils/passwordHash";
 
 import authConfig from '../config/auth';
 
@@ -18,6 +19,29 @@ export default class User {
   @Column()
   password: string;
 
+  // private tempPassword: string;
+
+  // @AfterLoad()
+  // private loadTempPassword(): void {
+  //   this.tempPassword = this.password;
+  // }
+
+  // @BeforeInsert()
+  // @BeforeUpdate()
+  // async hashPassword(): Promise<void> {
+  //   // cheack if that password changing or not
+  //   if (this.password) {
+  //     if (this.tempPassword !== this.password) {
+  //       try {
+  //         this.password = await PasswordHash.hash(this.password);
+  //       } catch (e) {
+
+  //         throw new Error('there are some issiue in the hash');
+  //       }
+  //     }
+  //   }
+  // }
+
   generateToken(): string {
     const { secret, expiresIn } = authConfig.jwt;
 
@@ -26,5 +50,4 @@ export default class User {
     });
   }
 }
-
 

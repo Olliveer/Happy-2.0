@@ -26,12 +26,16 @@ routes.get("/orphanages", OrphanagesController.index);
 
 
 // routes.use(authMiddleware);
-routes.post("/register", UsersController.create);
-routes.get("/users/:id", UsersController.show);
 routes.post("/orphanage/delete/:id", OrphanagesController.delete);
 routes.get("/pending", OrphanagesController.indexPending);
 routes.put("/pending/:id", OrphanagesController.pending);
 routes.put("/orphanage/edit", upload.array("images"), OrphanagesController.update);
+
+routes.get("/users", UsersController.index);
+routes.get("/users/:id", UsersController.show);
+routes.post("/register", UsersController.create);
+routes.put("/user", UsersController.update);
+routes.post("/user/delete/:id", UsersController.delete);
 
 
 

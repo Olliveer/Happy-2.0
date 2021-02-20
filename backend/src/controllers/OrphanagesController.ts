@@ -135,9 +135,7 @@ export default {
       accept,
       id_images_remove,
     } = req.body;
-
-    console.log(req.body);
-
+    
     const orphanagesRepository = getRepository(Orphanage);
     const imageRepository = getRepository(Image);
 
