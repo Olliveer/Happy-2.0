@@ -99,3 +99,33 @@
 .content-wrapper .login-app:hover {
     background: #96FEFF;
 }
+
+.content-wrapper .enter-login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    right: 0;
+    top: 10px;
+    height: 56px;
+    width: 222px;
+    
+    border-radius: 20px;
+    background-color: #12D4E0;
+  
+    transition: background-color 0.5s, color 0.5s;
+    cursor: pointer;
+  }
+  
+  .content-wrapper .enter-login:hover {
+    background-color: #96FEFF;
+    color: #15C3D6;
+  }
+
+  .content-wrapper .enter-login {
+      text-decoration: none;
+  }
+
+  .content-wrapper .enter-login strong {
+      color: #FFF;
+  }

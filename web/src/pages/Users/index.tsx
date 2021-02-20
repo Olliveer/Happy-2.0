@@ -10,15 +10,16 @@ import { FiEdit3, FiPlus, FiTrash } from 'react-icons/fi';
 
 import placeHolder from '../../images/placeHolder.svg';
 
-interface IUsers {
+export interface IUser {
     id: string;
     name: string;
     email: string;
+    password: string;
 }
 
 function User() {
     const history = useHistory();
-    const [users, setUsers] = useState<IUsers[]>([]);
+    const [users, setUsers] = useState<IUser[]>([]);
     const notify = () =>
         showToast({ type: "info", message: 'Sem users' });
 
@@ -36,7 +37,7 @@ function User() {
             buttons: ['Não', 'Sim']
         }).then(res => {
             if (res) {
-                api.post(`user/delete/${id}`).then(response => {
+                api.post(`user/delete/${id}`).then(() => {
                     setTimeout(() => {
                         history.go(0);
                     }, 2500)                    
@@ -69,7 +70,7 @@ function User() {
                                 <p>{user.name}</p>
                                 <p>{user.email}</p>
                                 <div>
-                                    <Link to={{ pathname: '/dashboard/users/edit', state: { user } }}                                    >
+                                    <Link to={{ pathname: '/dashboard/user/edit', state: { user } }}                                    >
                                         <FiEdit3 size={20} color="#15C3D6" />
                                     </Link>
                                     <button className="button-del-user" onClick={() => delAlert(user.id)}>

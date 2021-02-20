@@ -21,16 +21,16 @@ function SignIn() {
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
 
-        signIn(email, password).catch((err) => showToast({ type: "error", message: err.response.data.error }));
+        signIn(email, password).catch((err) => showToast({ type: "warn", message: err.response.data.error }));
     }
 
     return (
         <div id="login-page">
             <ToastAnimated />
-            <SideLogin />           
+            <SideLogin />
 
             <aside className="form-box">
-            
+
                 <form onSubmit={handleSubmit} className="login-form">
                     <fieldset>
                         <legend>Fazer login</legend>
@@ -64,7 +64,7 @@ function SignIn() {
                         <input id="checkbox" type="checkbox" onClick={() => setRemindMe(!remindMe)}></input>
                         <label htmlFor="remember">Lembrar-me</label>
 
-                        <Link to="/recover" className="forgot-password">
+                        <Link to="/recovery" className="forgot-password">
                             Esqueci a senha
 						</Link>
                     </div>

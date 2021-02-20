@@ -18,15 +18,17 @@ function Landing() {
                 </main>
 
                 <div className="location">
-                <Link to="/login" className="login-app">
-                    <FiLogIn size={26} color="rgba(0,0,0,0.6)" />
-                </Link>
+
                 </div>
+
+                <Link to="/login" className="enter-login">
+                    <strong>Área restrita</strong>
+                </Link>
 
                 <Link to="/app" className="enter-app">
                     <FiArrowRight size={26} color="rgba(0,0,0,0.6)" />
                 </Link>
-                
+
 
             </div>
         </div>

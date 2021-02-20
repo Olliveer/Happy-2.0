@@ -133,6 +133,8 @@ form.login-form button.confirm-button:hover {
     border: 1px solid #EBF2F5;
     background: #EBF2F5;
     border-radius: 16px;
+    outline: none;
+    cursor: pointer;
 }
 
 #login-page .back-btn:hover {
