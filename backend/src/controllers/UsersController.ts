@@ -4,6 +4,9 @@ import PasswordHash from "../utils/passwordHash";
 import usersView from "../views/users_view";
 import * as Yup from "yup";
 import { getRepository } from "typeorm";
+import crypto from 'crypto';
+import mailer from '../config/mailer';
+
 
 export default {
   async authenticate(req: Request, res: Response): Promise<Response> {
@@ -16,7 +19,7 @@ export default {
       });
 
       await schema.validate({ email, password }, { abortEarly: false, }).catch(function (err) {
-        err.inner.forEach(e => {
+        err.inner.forEach((e: { message: any; }) => {
           return res.status(400).json({ error: e.message });
         });
       })
@@ -39,6 +42,100 @@ export default {
       });
     } catch (err) {
       return res.status(400).json({ error: 'User authentication failed' })
+    }
+  },
+
+  async forgot(req: Request, res: Response) {
+    try {
+      const { email } = req.body;
+
+      const schema = Yup.object().shape({
+        email: Yup.string().required(),
+      });
+
+      await schema.validate({ email }, { abortEarly: false, }).catch(function (err) {
+        err.inner.forEach((e: { message: any; }) => {
+          return res.status(400).json({ error: e.message });
+        });
+      })
+
+      const userRepository = getRepository(User);
+
+      const user = await userRepository.findOne({ where: { email } });
+
+      if (!user) {
+        return res.status(400).json({ error: "User not found" });
+      }
+
+      const token = crypto.randomBytes(20).toString('hex');
+
+      const now = new Date();
+      now.setHours(now.getHours() + 1);
+
+      await userRepository.update(user.id, {
+        password_reset_token: token,
+        password_reset_expires: now,
+      });
+
+      mailer.sendMail({
+        to: email,
+        from: 'elyte.show@gmail.com',
+        template: 'auth/forgotPassword',
+        context: { token },
+      }, (err => {
+        if (err) {
+          console.log(err);
+          return res.status(400).json({ error: 'Cannot send forgot email password' })
+        }
+        return res.send();
+      }))
+
+    } catch (err) {
+      console.log('ERRO', err);
+      res.status(400).json({ error: 'Error on forgot password, try again' });
+    }
+  },
+
+  async reset(req: Request, res: Response) {
+    try {
+      const { email, token, password } = req.body;
+
+      const schema = Yup.object().shape({
+        email: Yup.string().required(),
+        token: Yup.string().required(),
+        password: Yup.string().required(),
+      });
+
+      await schema.validate({ email, token, password }, { abortEarly: false, }).catch(function (err) {
+        err.inner.forEach((e: { message: any; }) => {
+          return res.status(400).json({ error: e.message });
+        });
+      })
+
+      const userRepository = getRepository(User);
+
+      const user = await userRepository.findOne({ where: { email } });
+
+      if (!user) {
+        return res.status(400).json({ error: "User not found" });
+      }
+
+      if(token !== user.password_reset_token){
+        return res.status(400).json({ error: "Token invalid" });
+      }
+
+      const now = new Date();
+
+      if(now > user.password_reset_expires){
+        return res.status(400).json({ error: "Token expired, generate a new one" });
+      }
+
+      user.password = password;
+
+      await user.save();
+
+    } catch (err) {
+      return res.status(400).json({ error: 'Cannot send reset password' })
     }
   },
 
@@ -76,9 +173,9 @@ export default {
       };
 
       const schema = Yup.object().shape({
-        name: Yup.string().required('Name is required'),
-        email: Yup.string().required('E-mail is required'),
-        password: Yup.string().required('Password is required'),
+        name: Yup.string().required(),
+        email: Yup.string().required(),
+        password: Yup.string().required(),
       });
 
       await schema.validate(data, {
@@ -94,7 +191,6 @@ export default {
     return res.status(409).json({ error: 'User already exists' });
   },
 
-  // ADICIONAR YUP VALIDATION
   async update(req: Request, res: Response) {
     const {
       id,
@@ -102,6 +198,18 @@ export default {
       email,
       password
     } = req.body;
+
+    const schema = Yup.object().shape({
+      id: Yup.string().required(),
+      name: Yup.string().required(),
+      email: Yup.string().required(),
+    });
+
+    await schema.validate({ id, name, email }, { abortEarly: false, }).catch(function (err) {
+      err.inner.forEach((e: { message: any; }) => {
+        return res.status(400).json({ error: e.message });
+      });
+    })
 
     const userRepository = getRepository(User);
 

@@ -31,6 +31,16 @@ export class createUsers1610833197601 implements MigrationInterface {
             isNullable: false,
           },
           {
+            name: "password_reset_token",
+            type: "varchar",
+            isNullable: true,
+          },
+          {
+            name: "password_reset_expires",
+            type: "timestamp",
+            isNullable: true,
+          },
+          {
             name: "created_at",
             type: "TIMESTAMP",
             isPrimary: false,

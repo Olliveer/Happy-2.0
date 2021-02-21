@@ -18,6 +18,8 @@ process.on("unhandledRejection", (err) => console.error(err));
 
 //Sign In, Sign Up 
 routes.post("/login", UsersController.authenticate);
+routes.post("/forgot", UsersController.forgot);
+routes.post("/reset", UsersController.reset);
 
 routes.post("/orphanages", upload.array("images"), OrphanagesController.create);
 routes.get("/orphanages/:id", OrphanagesController.show);
