@@ -40,9 +40,13 @@ export default function UserEdit() {
             }
             await api.put('user', data).then(msg => {
                 showToast({ type: "success", message: msg.data.message })
-                history.push('/dashboard/users')
+                setTimeout(() => {
+                    history.push('/dashboard/users');
+                }, 2000)
             }).catch(
-                err => showToast({ type: "error", message: err.response.data.error })
+                err => showToast((err.status === 400)
+                    ? { type: "warn", message: err.response.data.error }
+                    : { type: "error", message: err.response.data.error })
             );
         } else {
             notify();
