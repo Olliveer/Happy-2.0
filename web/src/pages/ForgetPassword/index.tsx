@@ -1,27 +1,48 @@
-import React, { useState } from 'react';
+import React, { FormEvent, useState } from 'react';
 
 import './recovery.css';
 
 import SideRecovery from '../../components/PageLogin/PageLogin';
 import { useHistory } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
+import api from '../../services/api';
+import ToastAnimated, { showToast } from '../../utils/Toast/toast';
 
 
 
 
 export function ForgetPassword() {
     const { goBack } = useHistory();
+    const history = useHistory();
     const [email, setEmail] = useState('');
 
 
-    function handleSubmit() {
+    async function handleSubmit(event: FormEvent) {
+        event.preventDefault();
+
+        const data = {
+            email: email
+        }
+
+        await api.post('forgot', data).then(msg => {
+            showToast({ type: "success", message: msg.data.message })
+            setTimeout(() => {
+                history.push('/');
+            }, 2000)
+        })
+            .catch(err => {
+                showToast({ type: "error", message: err.response.data.error })
+                setTimeout(() => {
+                    history.push('/recovery');
+                }, 2000)
+            });
 
     }
 
     return (
         <div id="recovery-page">
             <SideRecovery />
-
+            <ToastAnimated />
             <aside className="form-box">
                 <form onSubmit={handleSubmit} className="login-form">
                     <fieldset>

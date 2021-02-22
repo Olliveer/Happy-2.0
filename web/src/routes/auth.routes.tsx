@@ -7,6 +7,7 @@ import Landing from '../pages/Landing';
 import Signin from '../pages/Login/';
 import Orphanage from '../pages/Orphanage';
 import OrphanagesMap from '../pages/OrphanagesMap';
+import ResetPassword from '../pages/ResetPassword';
 
 const AuthRoutes: React.FC = () => (
     <BrowserRouter>
@@ -18,6 +19,7 @@ const AuthRoutes: React.FC = () => (
             <Route path="/login" component={Signin} />
 
             <Route path="/recovery" component={ForgetPassword} />
+            <Route path="/reset/:token/:email" component={ResetPassword} />
 
             <Route path="/orphanages/create" component={CreateOrphanage} />
             <Route path="/orphanage/:id" component={Orphanage} />
