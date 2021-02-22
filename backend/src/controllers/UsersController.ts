@@ -18,9 +18,10 @@ export default {
         password: Yup.string().required(),
       });
 
+      //VERIFICAR RESPONSE SENDO ENVIADO DUAS VEZES EM VALIDAÇÃO YUP
       await schema.validate({ email, password }, { abortEarly: false, }).catch(function (err) {
         err.inner.forEach((e: { message: any; }) => {
-          return res.status(400).json({ error: e.message });
+          return res.status(400).send({ error: e.message });
         });
       })
 
@@ -54,9 +55,7 @@ export default {
       });
 
       await schema.validate({ email }, { abortEarly: false, }).catch(function (err) {
-        err.inner.forEach((e: { message: any; }) => {
-          return res.status(400).json({ error: e.message });
-        });
+        return res.status(400).json({ error: err.message });
       })
 
       const userRepository = getRepository(User);
@@ -81,17 +80,15 @@ export default {
         to: email,
         from: 'elyte.show@gmail.com',
         template: 'auth/forgotPassword',
-        context: { token },
+        context: { token, email },
       }, (err => {
         if (err) {
-          console.log(err);
-          return res.status(400).json({ error: 'Cannot send forgot email password' })
+          res.status(400).json({ error: 'Cannot send forgot email password' })
         }
-        return res.send();
+        res.status(200).json({ message: 'Check your e-mail :)' })
       }))
 
     } catch (err) {
-      console.log('ERRO', err);
       res.status(400).json({ error: 'Error on forgot password, try again' });
     }
   },
@@ -108,7 +105,7 @@ export default {
 
       await schema.validate({ email, token, password }, { abortEarly: false, }).catch(function (err) {
         err.inner.forEach((e: { message: any; }) => {
-          return res.status(400).json({ error: e.message });
+          res.status(400).json({ error: e.message });
         });
       })
 
@@ -120,22 +117,23 @@ export default {
         return res.status(400).json({ error: "User not found" });
       }
 
-      if(token !== user.password_reset_token){
-        return res.status(400).json({ error: "Token invalid" });
+      if (token !== user.password_reset_token) {
+        res.status(400).json({ error: "Token invalid" });
       }
 
       const now = new Date();
 
-      if(now > user.password_reset_expires){
-        return res.status(400).json({ error: "Token expired, generate a new one" });
+      if (now > user.password_reset_expires) {
+        res.status(400).json({ error: "Token expired, generate a new one" });
       }
 
-      user.password = password;
+      const hashedPassword: string = await PasswordHash.hash(password);
 
-      await user.save();
+      await userRepository.update(user.id, { password: hashedPassword });
+      res.status(200).json({ message: 'password reseted successfully :)' })
 
     } catch (err) {
-      return res.status(400).json({ error: 'Cannot send reset password' })
+      res.status(400).json({ error: 'Cannot send reset password' })
     }
   },
 
@@ -185,7 +183,7 @@ export default {
       const user = await userRepository.create(data);
 
       await userRepository.save(user);
-      return res.status(200).json({ password: undefined, msg: 'User registred' });
+      res.status(200).json({ password: undefined, msg: 'User registred' });
     }
 
     return res.status(409).json({ error: 'User already exists' });
@@ -207,7 +205,7 @@ export default {
 
     await schema.validate({ id, name, email }, { abortEarly: false, }).catch(function (err) {
       err.inner.forEach((e: { message: any; }) => {
-        return res.status(400).json({ error: e.message });
+        res.status(400).json({ error: e.message });
       });
     })
 
@@ -218,7 +216,7 @@ export default {
     const hashedPassword: string = await PasswordHash.hash(password);
 
     if (!user) {
-      return res.status(400).json({ error: 'Update error' });
+      res.status(400).json({ error: 'Update error' });
     } else {
       await userRepository.update(
         { id },
@@ -229,7 +227,7 @@ export default {
         }
       );
 
-      return res.status(201).json({ message: `User ${name} updated` });
+      res.status(201).json({ message: `User ${name} updated` });
     }
 
   },
