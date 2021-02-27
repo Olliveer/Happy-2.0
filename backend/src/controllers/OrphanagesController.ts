@@ -1,16 +1,17 @@
 import { NextFunction, Request, Response } from "express";
-import Orphanage from "../models/Orphanage";
-import Image from "../models/Image";
-import orphanageView from "../views/orphanages_view";
+import { getCustomRepository, getRepository } from "typeorm";
 import * as Yup from "yup";
+import { AppError } from "../errors/AppError";
+import Image from "../models/Image";
+import { default as Orphanage, default as Orphanages } from "../models/Orphanage";
+import { OrphanagesRepository } from "../repositories/OrphanagesRepository";
+import orphanageView from "../views/orphanages_view";
 
-import { getRepository } from "typeorm";
-import Orphanages from "../models/Orphanage";
 
 export default {
   async show(req: Request, res: Response) {
     const { id } = req.params;
-    const orphanagesRepository = getRepository(Orphanages);
+    const orphanagesRepository = getCustomRepository(OrphanagesRepository);
 
     const orphanage = await orphanagesRepository.findOneOrFail(id, {
       relations: ["images"],
@@ -20,7 +21,7 @@ export default {
   },
 
   async index(req: Request, res: Response) {
-    const orphanagesRepository = getRepository(Orphanage);
+    const orphanagesRepository = getCustomRepository(OrphanagesRepository);
 
     const orphanages = await orphanagesRepository.find({
       where: { accept: true },
@@ -30,12 +31,12 @@ export default {
     if (orphanages) {
       return res.json(orphanageView.renderMany(orphanages));
     } else {
-      return res.status(204).send({ error: "There is no orphanage accepted or available" });
+      throw new AppError('There is no orphanage accepted or available');
     }
   },
 
   async indexPending(req: Request, res: Response) {
-    const orphanagesRepository = getRepository(Orphanage);
+    const orphanagesRepository = getCustomRepository(OrphanagesRepository);
 
     const orphanages = await orphanagesRepository.find({
       where: { accept: false },
@@ -45,20 +46,20 @@ export default {
     if (orphanages) {
       return res.json(orphanageView.renderMany(orphanages));
     } else {
-      return res.status(204).send({ error: "There is no orphanage available" });
+      throw new AppError('There is no orphanage available');
     }
   },
 
   async pending(req: Request, res: Response) {
     const { id } = req.params;
-    const orphanagesRepository = getRepository(Orphanages);
+    const orphanagesRepository = getCustomRepository(OrphanagesRepository);
 
     const data = {
       accept: true,
     };
 
     await orphanagesRepository.update(id, data);
-    return res.status(200).send({ id: id, message: "Orphanage Accepted" });
+    return res.status(200).json({ id: id, message: "Orphanage Accepted" });
   },
 
   async create(req: Request, res: Response) {
@@ -71,31 +72,6 @@ export default {
       opening_hours,
       open_on_weekends,
     } = req.body;
-
-    const orphanagesRepository = getRepository(Orphanage);
-
-    const requestImages = req.files as Express.Multer.File[];
-    const images = requestImages.map((image) => {
-      return { path: image.filename };
-    });
-
-    const orphanageExists = await orphanagesRepository.findOne({ where: { name } });
-
-    if (orphanageExists) {
-      return res.status(409).send({ error: "Orphanage already exists" });
-    }
-
-    const data = {
-      name,
-      latitude,
-      longitude,
-      about,
-      instructions,
-      opening_hours,
-      open_on_weekends: open_on_weekends === "true",
-      accept: false,
-      images,
-    };
 
     const schema = Yup.object().shape({
       name: Yup.string().required(),
@@ -112,9 +88,36 @@ export default {
       ),
     });
 
-    await schema.validate(data, {
-      abortEarly: false,
+    try {
+      await schema.validate(req.body, { abortEarly: false });
+    } catch (err) {      
+      throw new AppError(err.errors[0])
+    }
+
+    const orphanagesRepository = getCustomRepository(OrphanagesRepository);
+
+    const requestImages = req.files as Express.Multer.File[];
+    const images = requestImages.map((image) => {
+      return { path: image.filename };
     });
+
+    const orphanageExists = await orphanagesRepository.findOne({ where: { name } });
+
+    if (orphanageExists) {
+      throw new AppError('Orphanage already exists');
+    }
+
+    const data = {
+      name,
+      latitude,
+      longitude,
+      about,
+      instructions,
+      opening_hours,
+      open_on_weekends: open_on_weekends === "true",
+      accept: false,
+      images,
+    };
 
     const orphanage = await orphanagesRepository.create(data);
 
@@ -135,8 +138,8 @@ export default {
       accept,
       id_images_remove,
     } = req.body;
-    
-    const orphanagesRepository = getRepository(Orphanage);
+
+    const orphanagesRepository = getCustomRepository(OrphanagesRepository);
     const imageRepository = getRepository(Image);
 
     // delete images 
@@ -179,12 +182,12 @@ export default {
 
     return res
       .status(204)
-      .json({ message: 'Orphanage updated.' });
+      .json({ message: 'Orphanage updated' });
   },
 
   async delete(req: Request, res: Response) {
     const { id } = req.params;
-    const orphanageRepository = getRepository(Orphanage);
+    const orphanageRepository = getCustomRepository(OrphanagesRepository);
 
     await orphanageRepository.delete(id);
 

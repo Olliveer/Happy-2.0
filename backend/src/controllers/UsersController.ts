@@ -1,145 +1,136 @@
+import crypto from 'crypto';
 import { Request, Response } from "express";
-import User from "../models/User";
+import { getCustomRepository } from "typeorm";
+import { resolve } from 'path';
+import * as Yup from "yup";
+import mailer from '../config/mailer';
+import { AppError } from "../errors/AppError";
+import { UsersRepository } from "../repositories/UsersRepository";
 import PasswordHash from "../utils/passwordHash";
 import usersView from "../views/users_view";
-import * as Yup from "yup";
-import { getRepository } from "typeorm";
-import crypto from 'crypto';
-import mailer from '../config/mailer';
+import SendMailService from '../services/SendMailService';
 
 
 export default {
   async authenticate(req: Request, res: Response): Promise<Response> {
+    const { email, password } = req.body;
+
+    const schema = Yup.object().shape({
+      password: Yup.string().required(),
+      email: Yup.string().required(),
+    });
+
     try {
-      const { email, password } = req.body;
-
-      const schema = Yup.object().shape({
-        email: Yup.string().required(),
-        password: Yup.string().required(),
-      });
-
-      //VERIFICAR RESPONSE SENDO ENVIADO DUAS VEZES EM VALIDAÇÃO YUP
-      await schema.validate({ email, password }, { abortEarly: false, }).catch(function (err) {
-        err.inner.forEach((e: { message: any; }) => {
-          return res.status(400).send({ error: e.message });
-        });
-      })
-
-      const userRepository = getRepository(User);
-
-      const user = await userRepository.findOne({ where: { email } });
-
-      if (!user) {
-        return res.status(400).json({ error: "User not found" });
-      }
-
-      if (!(await PasswordHash.checkHash(password, user.password))) {
-        return res.status(400).json({ error: "Invalid password" });
-      }
-
-      return res.json({
-        user: { ...user, password: undefined },
-        token: user.generateToken(),
-      });
+      await schema.validate(req.body, { abortEarly: true });
     } catch (err) {
-      return res.status(400).json({ error: 'User authentication failed' })
+      throw new AppError(err.errors[0])
     }
+
+    const userRepository = getCustomRepository(UsersRepository);
+
+    const user = await userRepository.findOne({ email });
+
+    if (!user) {
+      throw new AppError('User not found');
+    }
+
+    if (!(await PasswordHash.checkHash(password, user.password))) {
+      throw new AppError('Invalid password');
+    }
+
+    return res.json({
+      user: { ...user, password: undefined },
+      token: user.generateToken(),
+    });
   },
 
   async forgot(req: Request, res: Response) {
+    const { email } = req.body;
+
+    const schema = Yup.object().shape({
+      email: Yup.string().required(),
+    });
+
     try {
-      const { email } = req.body;
-
-      const schema = Yup.object().shape({
-        email: Yup.string().required(),
-      });
-
-      await schema.validate({ email }, { abortEarly: false, }).catch(function (err) {
-        return res.status(400).json({ error: err.message });
-      })
-
-      const userRepository = getRepository(User);
-
-      const user = await userRepository.findOne({ where: { email } });
-
-      if (!user) {
-        return res.status(400).json({ error: "User not found" });
-      }
-
-      const token = crypto.randomBytes(20).toString('hex');
-
-      const now = new Date();
-      now.setHours(now.getHours() + 1);
-
-      await userRepository.update(user.id, {
-        password_reset_token: token,
-        password_reset_expires: now,
-      });
-
-      mailer.sendMail({
-        to: email,
-        from: 'elyte.show@gmail.com',
-        template: 'auth/forgotPassword',
-        context: { token, email },
-      }, (err => {
-        if (err) {
-          res.status(400).json({ error: 'Cannot send forgot email password' })
-        }
-        res.status(200).json({ message: 'Check your e-mail :)' })
-      }))
-
+      await schema.validate(req.body, { abortEarly: false });
     } catch (err) {
-      res.status(400).json({ error: 'Error on forgot password, try again' });
+      throw new AppError(err.errors[0]);
     }
+
+    const userRepository = getCustomRepository(UsersRepository);
+
+    const user = await userRepository.findOne({ where: { email } });
+
+    if (!user) {
+      throw new AppError('User not found');
+    }
+
+    const token = crypto.randomBytes(20).toString('hex');
+
+    const now = new Date();
+    now.setHours(now.getHours() + 1);
+
+    await userRepository.update(user.id, {
+      password_reset_token: token,
+      password_reset_expires: now,
+    });
+
+    const npsPath = resolve(__dirname, '..', 'resources', 'mail', 'auth', 'forgotPassword.hbs');
+
+    const variables = {
+      name: user.name,
+      title: 'Recovery password',
+      description: 'Clique no link para criar uma nova senha',
+      token: token,
+      email: user.email,
+      link: process.env.MAIL_URL
+    }
+
+    await SendMailService.execute(email, 'RESET', variables, npsPath);
+    res.status(200).json({ message: 'Verify your e-mail :D' });
   },
 
   async reset(req: Request, res: Response) {
+    const { password, token } = req.body;
+
+    console.log(token)
+    const schema = Yup.object().shape({
+      password: Yup.string().required(),
+    });
+
     try {
-      const { email, token, password } = req.body;
-
-      const schema = Yup.object().shape({
-        email: Yup.string().required(),
-        token: Yup.string().required(),
-        password: Yup.string().required(),
-      });
-
-      await schema.validate({ email, token, password }, { abortEarly: false, }).catch(function (err) {
-        err.inner.forEach((e: { message: any; }) => {
-          res.status(400).json({ error: e.message });
-        });
-      })
-
-      const userRepository = getRepository(User);
-
-      const user = await userRepository.findOne({ where: { email } });
-
-      if (!user) {
-        return res.status(400).json({ error: "User not found" });
-      }
-
-      if (token !== user.password_reset_token) {
-        res.status(400).json({ error: "Token invalid" });
-      }
-
-      const now = new Date();
-
-      if (now > user.password_reset_expires) {
-        res.status(400).json({ error: "Token expired, generate a new one" });
-      }
-
-      const hashedPassword: string = await PasswordHash.hash(password);
-
-      await userRepository.update(user.id, { password: hashedPassword });
-      res.status(200).json({ message: 'password reseted successfully :)' })
-
+      await schema.validate(req.body, { abortEarly: true });
     } catch (err) {
-      res.status(400).json({ error: 'Cannot send reset password' })
+      throw new AppError(err.errors[0])
     }
+
+    const userRepository = getCustomRepository(UsersRepository);
+
+    const user = await userRepository.findOne({ password_reset_token: token });
+
+    if (!user) {
+      throw new AppError('User not found');
+    }
+
+    if (token !== user.password_reset_token) {
+      throw new AppError('Token invalid');
+    }
+
+    const now = new Date();
+
+    if (now > user.password_reset_expires) {
+      throw new AppError('Token expired, generate a new one');
+    }
+
+    const hashedPassword: string = await PasswordHash.hash(password);
+
+    await userRepository.update(user.id, { password: hashedPassword, password_reset_token: '' });
+    res.status(200).json({ message: 'password reseted successfully :)' })
   },
 
   async show(req: Request, res: Response) {
     const { id } = req.params;
-    const userRepository = getRepository(User);
+    const userRepository = getCustomRepository(UsersRepository);
 
     const user = await userRepository.findOneOrFail(id);
 
@@ -147,7 +138,7 @@ export default {
   },
 
   async index(req: Request, res: Response) {
-    const usersRepository = getRepository(User);
+    const usersRepository = getCustomRepository(UsersRepository);
 
     const users = await usersRepository.find();
 
@@ -157,36 +148,38 @@ export default {
   async create(req: Request, res: Response) {
     const { name, email, password, admin } = req.body;
 
-    const hashedPassword: string = await PasswordHash.hash(password);
+    const schema = Yup.object().shape({
+      name: Yup.string().required(),
+      email: Yup.string().required(),
+      password: Yup.string().required(),
+    });
 
-    const userRepository = getRepository(User);
+    try {
+      await schema.validate(req.body, { abortEarly: false });
+    } catch (err) {
+      throw new AppError(err.errors[0])
+    }
+
+    const userRepository = getCustomRepository(UsersRepository);
 
     const userExists = await userRepository.findOne({ where: { email } });
 
-    if (!userExists) {
-      const data = {
-        name,
-        email,
-        password: hashedPassword,
-      };
-
-      const schema = Yup.object().shape({
-        name: Yup.string().required(),
-        email: Yup.string().required(),
-        password: Yup.string().required(),
-      });
-
-      await schema.validate(data, {
-        abortEarly: false,
-      });
-
-      const user = await userRepository.create(data);
-
-      await userRepository.save(user);
-      res.status(200).json({ password: undefined, msg: 'User registred' });
+    if (userExists) {
+      throw new AppError('User already exists');
     }
 
-    return res.status(409).json({ error: 'User already exists' });
+    const hashedPassword: string = await PasswordHash.hash(password);
+
+    const data = {
+      name,
+      email,
+      password: hashedPassword,
+    };
+
+    const user = await userRepository.create(data);
+
+    await userRepository.save(user);
+    res.status(200).json({ password: undefined, msg: 'User registred' });
   },
 
   async update(req: Request, res: Response) {
@@ -201,23 +194,22 @@ export default {
       id: Yup.string().required(),
       name: Yup.string().required(),
       email: Yup.string().required(),
+      password: Yup.string(),
     });
 
-    await schema.validate({ id, name, email }, { abortEarly: false, }).catch(function (err) {
-      err.inner.forEach((e: { message: any; }) => {
-        res.status(400).json({ error: e.message });
-      });
-    })
+    try {
+      await schema.validate(req.body, { abortEarly: false });
+    } catch (err) {
+      throw new AppError(err.errors[0])
+    }
 
-    const userRepository = getRepository(User);
+    const userRepository = getCustomRepository(UsersRepository);
 
     const user = await userRepository.findOne(id);
 
     const hashedPassword: string = await PasswordHash.hash(password);
 
-    if (!user) {
-      res.status(400).json({ error: 'Update error' });
-    } else {
+    if (user) {
       await userRepository.update(
         { id },
         {
@@ -227,14 +219,15 @@ export default {
         }
       );
 
-      res.status(201).json({ message: `User ${name} updated` });
+      res.status(200).json({ message: `User ${name} updated` });
+    } else {
+      throw new AppError('Update error');
     }
-
   },
 
   async delete(req: Request, res: Response) {
     const { id } = req.params;
-    const userRepository = getRepository(User);
+    const userRepository = getCustomRepository(UsersRepository);
 
     const user = await userRepository.findOneOrFail(id);
 

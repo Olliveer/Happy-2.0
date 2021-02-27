@@ -16,8 +16,6 @@ const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
     return res.status(400).send({ message: "Validation fails", erros: errors });
   }
 
-  console.error(error);
-
   return res.status(500).json({ error: "Internal server error" });
 };
 
