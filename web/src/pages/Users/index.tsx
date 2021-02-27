@@ -27,7 +27,7 @@ function User() {
         api.get('users').then(response => {
             setUsers(response.data);
         })
-    }, []);
+    }, [users]);
 
     const delAlert = (id: string) => {
         swal({
@@ -37,11 +37,7 @@ function User() {
             buttons: ['Não', 'Sim']
         }).then(res => {
             if (res) {
-                api.post(`user/delete/${id}`).then(() => {
-                    setTimeout(() => {
-                        history.go(0);
-                    }, 2500)                    
-                });
+                api.post(`user/delete/${id}`);
                 swal({ text: 'Usuário deletado com sucesso', icon: 'success', timer: 2000 })
             } else {
                 history.push('/dashboard/users');

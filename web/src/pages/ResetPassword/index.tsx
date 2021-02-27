@@ -1,16 +1,13 @@
 import React, { FormEvent, useState } from 'react';
-
-import './reset-password.css';
-
-import SideRecovery from '../../components/PageLogin/PageLogin';
-import { useHistory, useParams } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
+import { useHistory, useParams } from 'react-router-dom';
+import SideRecovery from '../../components/PageLogin/PageLogin';
 import api from '../../services/api';
 import ToastAnimated, { showToast } from '../../utils/Toast/toast';
+import './reset-password.css';
 
 interface TokenParams {
     token: string;
-    email: string;
 }
 
 function ResetPassword() {
@@ -18,10 +15,8 @@ function ResetPassword() {
     const params = useParams<TokenParams>();
     const [password, setPassword] = useState('');
     const [re_password, setRePassword] = useState('');
-    const [email] = useState(params.email);
 
     const notify = () => showToast({ type: "warn", message: "Confirme seu password" });
-    const notifyForm = () => showToast({ type: "warn", message: "Preencha os campos" });
 
     function goBack() {
         history.push("/");
@@ -31,12 +26,11 @@ function ResetPassword() {
         event.preventDefault();
 
         if (password !== re_password) {
-            history.push(`/reset/${params.token}/${params.email}`);
+            history.push(`/reset/${params.token}`);
             notify();
         } else {
             const data = {
                 token: params.token,
-                email: email,
                 password: password
             }
             await api.post('reset', data).then(msg => {
@@ -48,8 +42,8 @@ function ResetPassword() {
                 .catch(err => {
                     showToast({ type: "error", message: err.response.data.error })
                     setTimeout(() => {
-                        history.push(`/reset/${params.token}/${params.email}`);
-                    }, 2000)
+                        history.push(`/reset/${params.token}`);
+                    }, 3000)
                 });
 
         }

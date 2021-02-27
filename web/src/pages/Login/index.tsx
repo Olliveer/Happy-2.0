@@ -15,13 +15,11 @@ function SignIn() {
     const [password, setPassword] = useState('');
     const [remindMe, setRemindMe] = useState(false);
     const [loading, setLoading] = useState(false);
-    // const notify = () =>
-    // showToast({ type: "success", message: err.response.data.error });
 
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
 
-        signIn(email, password).catch((err) => showToast({ type: "warn", message: err.response.data.error }));
+        signIn(email, password).catch(err => showToast({ type: "warn", message: err.response.data.message }))
     }
 
     return (

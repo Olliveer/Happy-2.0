@@ -19,7 +19,7 @@ const AuthRoutes: React.FC = () => (
             <Route path="/login" component={Signin} />
 
             <Route path="/recovery" component={ForgetPassword} />
-            <Route path="/reset/:token/:email" component={ResetPassword} />
+            <Route path="/reset/:token" component={ResetPassword} />
 
             <Route path="/orphanages/create" component={CreateOrphanage} />
             <Route path="/orphanage/:id" component={Orphanage} />
