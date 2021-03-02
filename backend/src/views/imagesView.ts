@@ -1,10 +1,16 @@
 import Image from "../models/Image";
 
+
+
 export default {
   render(image: Image) {
     return {
       id: image.id,
-      url: `http://192.168.100.63:3333/uploads/${image.path}`,
+      name: image.name,
+      size: image.size,
+      url: image.url,
+      key: image.key,
+      created_at: image.created_at
     };
   },
 

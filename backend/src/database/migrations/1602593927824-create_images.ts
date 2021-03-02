@@ -14,10 +14,30 @@ export class createImages1602593927824 implements MigrationInterface {
             isGenerated: true,
             generationStrategy: "increment",
           },
-
           {
-            name: "path",
+            name: "name",
             type: "varchar",
+            isNullable: false,
+          },
+          {
+            name: "size",
+            type: "integer",
+            isNullable: false,
+          },
+          {
+            name: "key",
+            type: "varchar",
+            isNullable: false,
+          },
+          {
+            name: "url",
+            type: "varchar",
+            isNullable: false,
+          },
+          {
+            name: "created_at",
+            type: "timestamp",
+            default: "now()",
           },
           {
             name: "orphanage_id",

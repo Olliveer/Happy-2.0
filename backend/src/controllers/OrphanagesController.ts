@@ -7,6 +7,10 @@ import { default as Orphanage, default as Orphanages } from "../models/Orphanage
 import { OrphanagesRepository } from "../repositories/OrphanagesRepository";
 import orphanageView from "../views/orphanages_view";
 
+interface MulterFile {
+  key?: string;
+  location?: string;
+}
 
 export default {
   async show(req: Request, res: Response) {
@@ -62,7 +66,7 @@ export default {
     return res.status(200).json({ id: id, message: "Orphanage Accepted" });
   },
 
-  async create(req: Request, res: Response) {
+  async create(req: Request & { file: MulterFile }, res: Response) {
     const {
       name,
       latitude,
@@ -90,15 +94,21 @@ export default {
 
     try {
       await schema.validate(req.body, { abortEarly: false });
-    } catch (err) {      
+    } catch (err) {
       throw new AppError(err.errors[0])
     }
 
     const orphanagesRepository = getCustomRepository(OrphanagesRepository);
 
     const requestImages = req.files as Express.Multer.File[];
+
     const images = requestImages.map((image) => {
-      return { path: image.filename };
+      return {
+        name: image.originalname,
+        size: image.size,
+        key: image.key,
+        url: image.location || ''
+      };
     });
 
     const orphanageExists = await orphanagesRepository.findOne({ where: { name } });
@@ -158,8 +168,8 @@ export default {
     if (requestImages) {
       requestImages.forEach(async (image) => {
         const img = imageRepository.create({
-          path: image.filename,
-          orphanage: id,
+          // path: image.filename,
+          // orphanage: id,
         });
         await imageRepository.save(img);
       });
