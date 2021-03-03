@@ -13,6 +13,7 @@ import OrphanagePermit from '../pages/OrphanagePermit';
 import EditOrphanage from '../pages/EditOrphanage';
 import Users from '../pages/Users';
 import UserEdit from '../pages/UserEdit';
+import OrphanageApply from '../pages/OrphanageApply';
 
 const AppRoutes: React.FC = () => (
     <BrowserRouter>
@@ -24,6 +25,7 @@ const AppRoutes: React.FC = () => (
             <Route path="/dashboard/user/create" component={Register} />
             <Route path="/app" component={OrphanagesMap} />
             <Route path="/orphanages/create" component={CreateOrphanage} />
+            <Route path="/orphanage/status" component={OrphanageApply} />
             <Route path="/orphanage/:id" component={Orphanage} />
             <Route path="/dashboard/delete/:id" component={DeleteOrphanage} />
             <Route path="/orphanages/pending" component={PendingOrphanage} />

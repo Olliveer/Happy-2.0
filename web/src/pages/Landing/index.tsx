@@ -1,10 +1,9 @@
 import React from 'react';
-import { FiArrowRight, FiLogIn } from 'react-icons/fi';
+import { FiArrowRight } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
+import logoImg from '../../images/logo.svg';
+import './landing.css';
 
-
-import '../styles/pages/landing.css';
-import logoImg from '../images/logo.svg';
 
 function Landing() {
     return (

@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { FiArrowRight, FiPlus } from 'react-icons/fi';
+import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
 import { Link } from 'react-router-dom';
-import { FiPlus, FiArrowRight } from 'react-icons/fi';
-import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
-
-import mapMarkerImg from '../images/map-marker.svg';
-
-import '../styles/pages/orphanage-map.css';
-import mapIcon from '../utils/mapIcon';
-import api from '../services/api';
+import api from '../../services/api';
+import mapIcon from '../../utils/mapIcon';
+import mapMarkerImg from '../../images/map-marker.svg';
+import './orphanage-map.css';
 
 interface Orphanage {
     id: number;
@@ -16,21 +14,36 @@ interface Orphanage {
     name: string;
 }
 
+
 function OrphanagesMap() {
     const [orphanages, setOrphanages] = useState<Orphanage[]>([]);
+    const [latitude, setLatitude] = useState(-25.4947402)
+    const [longitude, setLongitude] = useState(-49.4298831)
+    const [zoom, setZoom] = useState(9);
+
+    function componentDidMount() {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            console.log("Latitude is :", setLatitude(position.coords.latitude));
+            console.log("Longitude is :", setLongitude(position.coords.longitude));
+            setZoom(12);
+        });
+    }
 
     useEffect(() => {
         api.get('orphanages').then(response => {
             setOrphanages(response.data);
         })
+        componentDidMount();
     }, [])
+
+
 
     return (
         <div id="page-map">
             <aside>
                 <header>
                     <Link to="/">
-                    <img src={mapMarkerImg} alt="Happy" />
+                        <img src={mapMarkerImg} alt="Happy" />
                     </Link>
 
                     <h2>Escolha um orfanato no mapa</h2>
@@ -44,8 +57,8 @@ function OrphanagesMap() {
             </aside>
 
             <Map
-                center={[-25.4872759, -49.2942842]}
-                zoom={15}
+                center={[latitude, longitude]}
+                zoom={zoom}
                 style={{ width: '100%', height: '100%' }}
             >
                 {/* <TileLayer url="https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"/> */}

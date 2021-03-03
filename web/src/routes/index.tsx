@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/auth';
 
 import AuthRoutes from './auth.routes';
 import AppRoutes from './app.routes';
-import { useHistory } from 'react-router-dom';
+import Loader from 'react-loader-spinner';
 
 
 const Routes: React.FC = () => {
@@ -20,7 +20,7 @@ const Routes: React.FC = () => {
                     color: '#000',
                 }}
             >
-                Loading...
+                <Loader type="Puff" color="#000" height={80} width={80} />
             </div>
         );
     }

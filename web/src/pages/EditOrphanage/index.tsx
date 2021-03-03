@@ -10,16 +10,13 @@ import mapIcon from "../../utils/mapIcon";
 import api from "../../services/api";
 
 import { IOrphanage, IOrphanageImages } from '../../pages/Dashboard/index';
+import Loader from "react-loader-spinner";
+import { showToast } from "../../utils/Toast/toast";
 
 interface IOrphanageProps {
     orphanage: IOrphanage;
     children: ReactNode;
 }
-
-
-// interface OrphanageParams {
-//     id: string;
-// }
 
 export default function EditOrphanage() {
     const history = useHistory();
@@ -31,8 +28,8 @@ export default function EditOrphanage() {
     const [instructions, setInstructions] = useState(orphanage.instructions);
     const [opening_hours, setOpeningHours] = useState(orphanage.opening_hours);
     const [open_on_weekends, setOpenOnWeekends] = useState(orphanage.open_on_weekends);
-    // const [previewImages, setPreviewImages] = useState<string[]>([]);
     const [position, setPosition] = useState({ latitude: orphanage.latitude, longitude: orphanage.longitude });
+    const [loading, setLoading] = useState(false);
 
     const [images, setImages] = useState<File[]>([]);
     const [previewImages, setPreviewImages] = useState<IOrphanageImages[]>(
@@ -98,10 +95,17 @@ export default function EditOrphanage() {
             data.append('id_images_remove', image.id as any);
         });
 
-        await api.put<IOrphanage>(`orphanage/edit`, data);
 
-        // alert('Update realizado com sucesso');
-        history.push('/');
+        setLoading(true);
+        await api.put<IOrphanage>(`orphanage/edit`, data).then(msg => {
+            showToast({ type: "success", message: `Orfanato ${orphanage.name} Updated` })
+            history.push('/orphanages/pending');
+        }).catch(
+            err => showToast((err.status === 400)
+                ? { type: "warn", message: err.response.data.error }
+                : { type: "error", message: err.response.data.error })
+        );
+        setLoading(false);
 
     }
 
@@ -252,7 +256,11 @@ export default function EditOrphanage() {
                     </fieldset>
 
                     <button className="confirm-button" type="submit">
-                        Atualizar
+                        {!loading ? (
+                            'Atualizar'
+                        ) : (
+                                <Loader type="Puff" color="#FFF" height={40} width={40} />
+                            )}
                     </button>
                 </form>
             </main>

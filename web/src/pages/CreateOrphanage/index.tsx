@@ -1,15 +1,14 @@
-import React, { ChangeEvent, FormEvent, useState } from "react";
-import { Map, Marker, TileLayer } from 'react-leaflet';
 import { LeafletMouseEvent } from 'leaflet';
-import { useHistory } from "react-router-dom";
-
+import React, { ChangeEvent, FormEvent, useState } from "react";
 import { FiPlus } from "react-icons/fi";
-
-import '../styles/pages/create-orphanage.css';
-import Sidebar from "../components/Sidebar";
-import mapIcon from "../utils/mapIcon";
-import api from "../services/api";
-
+import { Map, Marker, TileLayer } from 'react-leaflet';
+import Loader from "react-loader-spinner";
+import { useHistory } from "react-router-dom";
+import Sidebar from "../../components/Sidebar";
+import api from "../../services/api";
+import mapIcon from "../../utils/mapIcon";
+import ToastAnimated, { showToast } from '../../utils/Toast/toast';
+import './create-orphanage.css';
 
 
 export default function CreateOrphanage() {
@@ -23,6 +22,8 @@ export default function CreateOrphanage() {
   const [open_on_weekends, setOpenOnWeekends] = useState(true);
   const [images, setImages] = useState<File[]>([]);
   const [previewImages, setPreviewImages] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const notify = () => showToast({ type: "warn", message: "Adicione pelo menos uma imagem" });
 
   function handleMapClick(event: LeafletMouseEvent) {
     const { lat, lng } = event.latlng;
@@ -62,21 +63,28 @@ export default function CreateOrphanage() {
     data.append('longitude', String(longitude));
     data.append('opening_hours', opening_hours);
     data.append('open_on_weekends', String(open_on_weekends));
-    
-    images.forEach(image => {
-      data.append('images', image);
-    })
 
-   await api.post('orphanages', data);
-   
-   history.push('/app');
+    if (images.length <= 0) {
+      notify();
+      return;
+    } else {
+      images.forEach(image => {
+        data.append('images', image);
+      })
+
+    }
+
+    setLoading(true);
+    await api.post('orphanages', data);
+    setLoading(false);
+    history.push('/orphanage/status');
 
   }
 
   return (
     <div id="page-create-orphanage">
       <Sidebar />
-
+      <ToastAnimated />
       <main>
         <form onSubmit={handleSubmit} className="create-orphanage-form">
           <fieldset>
@@ -123,7 +131,7 @@ export default function CreateOrphanage() {
               <label htmlFor="images">Fotos</label>
 
               <div className="images-container">
-                {previewImages.map(image =>{
+                {previewImages.map(image => {
                   return (
                     <img key={image} src={image} alt={name} />
                   )
@@ -180,7 +188,11 @@ export default function CreateOrphanage() {
           </fieldset>
 
           <button className="confirm-button" type="submit">
-            Confirmar
+            {!loading ? (
+              'Confirmar'
+            ) : (
+                <Loader type="Puff" color="#FFF" height={40} width={40} />
+              )}
           </button>
         </form>
       </main>

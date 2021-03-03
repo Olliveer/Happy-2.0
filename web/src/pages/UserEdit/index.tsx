@@ -1,13 +1,13 @@
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useState } from "react";
+import Loader from "react-loader-spinner";
 import { useHistory } from "react-router-dom";
-import api from '../../services/api';
-
-import ToastAnimated, { showToast } from '../../utils/Toast/toast';
-import './user-edit.css';
 import Sidebar from "../../components/Dashboard";
-import { FiCheck } from "react-icons/fi";
-
+import api from '../../services/api';
+import ToastAnimated, { showToast } from '../../utils/Toast/toast';
 import { IUser } from '../Users';
+import './user-edit.css';
+
+
 
 interface User {
     user: IUser
@@ -23,6 +23,7 @@ export default function UserEdit() {
     const [email, setEmail] = useState(user.email);
     const [password, setPassword] = useState('');
     const [re_password, setRepassword] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const notify = () => showToast({ type: "info", message: "Confirme seu password" });
 
@@ -38,6 +39,7 @@ export default function UserEdit() {
                 email,
                 password
             }
+            setLoading(true);
             await api.put('user', data).then(msg => {
                 showToast({ type: "success", message: msg.data.message })
                 setTimeout(() => {
@@ -51,7 +53,7 @@ export default function UserEdit() {
         } else {
             notify();
         }
-
+        setLoading(false);
 
 
     }
@@ -99,8 +101,13 @@ export default function UserEdit() {
                     </fieldset>
 
                     <button className="confirm-button" type="submit">
-                        <FiCheck size={24} color="#FFF" />
-                        Atualizar
+
+                        {!loading ? (
+                            // <FiCheck size={24} color="#FFF" />
+                            'Atualizar'
+                        ) : (
+                                <Loader type="Puff" color="#FFF" height={40} width={40} />
+                            )}
                     </button>
                 </form>
             </main>

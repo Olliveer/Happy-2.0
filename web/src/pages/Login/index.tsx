@@ -1,11 +1,12 @@
 import React, { FormEvent, useState } from 'react';
 import { FiArrowLeft } from 'react-icons/fi';
-import ToastAnimated, { showToast } from '../../utils/Toast/toast';
+import Loader from 'react-loader-spinner';
 import { Link, useHistory } from 'react-router-dom';
 import SideLogin from '../../components/PageLogin/PageLogin';
 import { useAuth } from '../../contexts/auth';
-
+import ToastAnimated, { showToast } from '../../utils/Toast/toast';
 import './login.css';
+
 
 function SignIn() {
     const { goBack } = useHistory();
@@ -18,8 +19,9 @@ function SignIn() {
 
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
-
+        setLoading(true);
         signIn(email, password).catch(err => showToast({ type: "warn", message: err.response.data.message }))
+        setLoading(false);
     }
 
     return (
@@ -68,7 +70,12 @@ function SignIn() {
                     </div>
 
                     <button disabled={false} className="confirm-button" type="submit">
-                        Entrar
+                        {!loading ? (
+                            // <FiCheck size={24} color="#FFF" />
+                            'Entrar'
+                        ) : (
+                                <Loader type="Puff" color="#FFF" height={40} width={40} />
+                            )}
                     </button>
 
                 </form>

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import Sidebar from '../../components/Dashboard';
-import ToastAnimated, { showToast } from '../../utils/Toast/toast';
-import api from '../../services/api';
-import './dashboard.css';
+import { FiEdit3, FiMapPin, FiTrash } from 'react-icons/fi';
 import { Map, Marker, TileLayer } from 'react-leaflet';
 import { Link } from 'react-router-dom';
-import { FiEdit3, FiMapPin, FiTrash } from 'react-icons/fi';
+import Sidebar from '../../components/Dashboard';
+import api from '../../services/api';
 import mapIcon from '../../utils/mapIcon';
+import ToastAnimated from '../../utils/Toast/toast';
+import './dashboard.css';
 
 export interface IOrphanageImages {
     id?: number;

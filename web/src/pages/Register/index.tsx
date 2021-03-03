@@ -1,11 +1,11 @@
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useState } from "react";
+import { FiCheck } from "react-icons/fi";
 import { useHistory } from "react-router-dom";
+import Sidebar from "../../components/Dashboard";
 import api from '../../services/api';
-
 import ToastAnimated, { showToast } from '../../utils/Toast/toast';
 import './register.css';
-import Sidebar from "../../components/Dashboard";
-import { FiCheck } from "react-icons/fi";
+
 
 
 

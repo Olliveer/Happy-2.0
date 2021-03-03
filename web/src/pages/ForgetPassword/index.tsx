@@ -7,6 +7,7 @@ import { useHistory } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 import api from '../../services/api';
 import ToastAnimated, { showToast } from '../../utils/Toast/toast';
+import Loader from 'react-loader-spinner';
 
 
 
@@ -15,6 +16,7 @@ export function ForgetPassword() {
     const { goBack } = useHistory();
     const history = useHistory();
     const [email, setEmail] = useState('');
+    const [loading, setLoading] = useState(false);
 
 
     async function handleSubmit(event: FormEvent) {
@@ -23,12 +25,11 @@ export function ForgetPassword() {
         const data = {
             email: email
         }
-
+        setLoading(true);
         await api.post('forgot', data).then(msg => {
-            showToast({ type: "success", message: msg.data.message })
-            setTimeout(() => {
-                history.push('/');
-            }, 2000)
+            showToast({ type: "success", message: msg.data.message })            
+            history.push('/');
+            
         })
             .catch(err => {
                 showToast({ type: "error", message: err.response.data.error })
@@ -36,6 +37,8 @@ export function ForgetPassword() {
                     history.push('/recovery');
                 }, 2000)
             });
+
+            setLoading(false);
 
     }
 
@@ -62,7 +65,11 @@ export function ForgetPassword() {
                         </div>
                     </fieldset>
                     <button disabled={false} className="confirm-button" type="submit">
-                        Entrar
+                        {!loading ? (
+                            'Entrar'
+                        ) : (
+                                <Loader type="Puff" color="#FFF" height={40} width={40} />
+                            )}
                     </button>
                 </form>
 
