@@ -1,5 +1,6 @@
-import { Request, NextFunction } from "express";
-import { verify } from "jsonwebtoken";
+import { NextFunction, Request } from "express";
+import { AppError } from "../errors/AppError";
+import jwt from 'jsonwebtoken';
 import authConfig from '../config/auth';
 
 interface Token {
@@ -9,25 +10,22 @@ interface Token {
 }
 
 export default function auth(req: Request, res: any, next: NextFunction): void {
-  const authHeader = req.headers.authorization;
+  const authHeader: string | undefined = req.headers.authorization;
+  console.log('AUTORIZATION -> ', authHeader);
 
   if (!authHeader) {
-    return res.status(401).send({ error: "No token provided" });
+    return res.status(401).json({ message: 'No token provided.' });
   }
 
-  const [scheme, token] = authHeader.split(" ");
+  const [, token] = authHeader.split(' ');
 
   try {
-    const decoded = verify(token, authConfig.jwt.secret);
-    const { id } = decoded as Token;
-
-    req.user = {
-      id,
-    }
+    const verified = jwt.verify(token, authConfig.jwt.secret);
+    req.user = verified;
 
     return next();
   } catch (err) {
-    return res.status(401).send({ error: "Token invalid"});
+    throw new AppError('Invalid JWT!', 400);
   }
 };
 

@@ -1,9 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, BeforeUpdate, AfterLoad, BeforeInsert, InsertEvent, UpdateEvent } from "typeorm";
-import PasswordHash from "../utils/passwordHash";
-
+import { sign } from "jsonwebtoken";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import authConfig from '../config/auth';
 
-import { sign } from "jsonwebtoken";
 
 @Entity("users")
 export default class User {
@@ -25,35 +23,9 @@ export default class User {
   @Column({ nullable: true })
   password_reset_expires: Date;
 
-  // private tempPassword: string;
-
-  // @AfterLoad()
-  // private loadTempPassword(): void {
-  //   this.tempPassword = this.password;
-  // }
-
-  // @BeforeInsert()
-  // @BeforeUpdate()
-  // async hashPassword(): Promise<void> {
-  //   // cheack if that password changing or not
-  //   if (this.password) {
-  //     if (this.tempPassword !== this.password) {
-  //       try {
-  //         this.password = await PasswordHash.hash(this.password);
-  //       } catch (e) {
-
-  //         throw new Error('there are some issiue in the hash');
-  //       }
-  //     }
-  //   }
-  // }
-
   generateToken(): string {
     const { secret, expiresIn } = authConfig.jwt;
-
-    return sign({ id: this.id }, secret, {
-      expiresIn,
-    });
+    return sign({ id: this.id }, secret, { expiresIn });
   }
 }
 

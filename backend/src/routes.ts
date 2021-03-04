@@ -3,9 +3,9 @@ import multer from "multer";
 import config from './config/multer';
 import OrphanagesController from "./controllers/OrphanagesController";
 import UsersController from "./controllers/UsersController";
+import auth from "./middlewares/auth";
 
 const routes = Router();
-import authMiddleware from "./middlewares/auth";
 
 process.on("unhandledRejection", (err) => console.error(err));
 
@@ -16,6 +16,7 @@ process.on("unhandledRejection", (err) => console.error(err));
 // Controllers
 
 //Sign In, Sign Up 
+
 routes.post("/login", UsersController.authenticate);
 routes.post("/forgot", UsersController.forgot);
 routes.post("/reset", UsersController.reset);
@@ -26,12 +27,12 @@ routes.get("/orphanages", OrphanagesController.index);
 
 
 
-// routes.use(authMiddleware);
+
+routes.use(auth);
 routes.post("/orphanage/delete/:id", OrphanagesController.delete);
 routes.get("/pending", OrphanagesController.indexPending);
 routes.put("/pending/:id", OrphanagesController.pending);
 routes.put("/orphanage/edit", multer(config).array("images"), OrphanagesController.update);
-
 routes.get("/users", UsersController.index);
 routes.get("/users/:id", UsersController.show);
 routes.post("/register", UsersController.create);

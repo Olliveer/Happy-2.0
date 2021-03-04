@@ -1,14 +1,14 @@
 import crypto from 'crypto';
 import { Request, Response } from "express";
-import { getCustomRepository } from "typeorm";
 import { resolve } from 'path';
+import { getCustomRepository } from "typeorm";
+import jwt from 'jsonwebtoken';
 import * as Yup from "yup";
-import mailer from '../config/mailer';
 import { AppError } from "../errors/AppError";
 import { UsersRepository } from "../repositories/UsersRepository";
+import SendMailService from '../services/SendMailService';
 import PasswordHash from "../utils/passwordHash";
 import usersView from "../views/users_view";
-import SendMailService from '../services/SendMailService';
 
 
 export default {
@@ -39,7 +39,6 @@ export default {
     }
 
     return res.json({
-      user: { ...user, password: undefined },
       token: user.generateToken(),
     });
   },

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { getCustomRepository, getRepository } from "typeorm";
 import * as Yup from "yup";
+import { deleteImagesAWS } from "../config/multer";
 import { AppError } from "../errors/AppError";
 import Image from "../models/Image";
 import { default as Orphanage, default as Orphanages } from "../models/Orphanage";
@@ -168,8 +169,11 @@ export default {
     if (requestImages) {
       requestImages.forEach(async (image) => {
         const img = imageRepository.create({
-          // path: image.filename,
-          // orphanage: id,
+          name: image.originalname,
+          size: image.size,
+          key: image.key,
+          url: image.location || '',
+          orphanage: id,
         });
         await imageRepository.save(img);
       });
