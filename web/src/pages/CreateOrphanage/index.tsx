@@ -4,7 +4,7 @@ import { FiPlus } from "react-icons/fi";
 import { Map, Marker, TileLayer } from 'react-leaflet';
 import Loader from "react-loader-spinner";
 import { useHistory } from "react-router-dom";
-import Sidebar from "../../components/Sidebar";
+import Sidebar from '../../components/Sidebar';
 import api from "../../services/api";
 import mapIcon from "../../utils/mapIcon";
 import ToastAnimated, { showToast } from '../../utils/Toast/toast';

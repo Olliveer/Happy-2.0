@@ -27,7 +27,7 @@ function User() {
         api.get('users').then(response => {
             setUsers(response.data);
         })
-    }, [users]);
+    }, []);
 
     const delAlert = (id: string) => {
         swal({

@@ -1,33 +1,9 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import * as auth from '../services/auth';
-
-//VERIFICAR O USER QUE VEM DO BACKEND
-
-
-// interface User {
-//     id: number;
-//     name: string;
-//     email: string;
-//     password: string;
-//     // admin: boolean;
-// }
-
-// interface Credentials {
-//     email: string;
-//     password: string;
-// }
-
-interface IDecodeJWToken {
-    email: string;
-    exp: number;
-    iat: number;
-    id: number;
-    name: string;
-  }
+import api from '../services/api';
 
 interface AuthContextData {
     signed: boolean;
-    // user: User | null;
     token: string | null;
     loading: boolean;
     signIn(email: string, password: string): Promise<void>;
@@ -38,29 +14,40 @@ interface AuthContextData {
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export const AuthProvider: React.FC = ({ children }) => {
-    // const [user, setUser] = useState<User | null>(null);
     const [token, setToken] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
 
+    // useEffect(() => {
+    //     const storageToken = localStorage.getItem('web:token');
+    //     console.log('GET TOKEN -> ', storageToken);
+    //     if (storageToken) {
+    //         api.defaults.headers.Authorization = `Bearer ${storageToken}`;
+    //         setToken(storageToken);
+    //     }
+    //     setLoading(false);
+    // }, []);
 
     useEffect(() => {
-        // const storageUser = localStorage.getItem('@RNAuth:user');
-        const storageToken = localStorage.getItem('web:token');
+        async function loadStorageData() {
+            const storageToken = await localStorage.getItem('web:token');
 
-        if (storageToken) {
-            // api.defaults.headers.Authorization = `Bearer ${storageToken}`;
-            setToken(storageToken);
-        }
-
-        setLoading(false);
+            if (storageToken) {
+                api.defaults.headers.Authorization = `Bearer ${storageToken}`;
+                setToken(storageToken);                
+                
+            }
+            setLoading(false);
+        }        
+        loadStorageData();
     }, []);
 
     async function signIn(username: string, password: string) {
         const response = await auth.SignInService(username, password);
 
+        api.defaults.headers.Authorization = `Bearer ${response.data.token}`;
+
         console.log('Response data ' + response.data.token);
         setToken(response.data.token);
-
         localStorage.setItem('web:token', response.data.token);
     }
 
@@ -68,7 +55,6 @@ export const AuthProvider: React.FC = ({ children }) => {
         auth.signOut();
         setToken(null);
     }
-
 
     return (
         <AuthContext.Provider value={{ signed: Boolean(token), token, loading, signIn, signOut }}>

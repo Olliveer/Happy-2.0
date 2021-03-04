@@ -9,6 +9,8 @@ import Loader from 'react-loader-spinner';
 
 const Routes: React.FC = () => {
     const { signed, loading } = useAuth();
+    console.log('LOGIN? ', signed);
+    console.log('LOad? ', loading);
 
     if (loading) {
         return (
@@ -25,7 +27,7 @@ const Routes: React.FC = () => {
         );
     }
 
-    return signed ? <AppRoutes /> : <AuthRoutes />;
+    return (signed === true) ? <AppRoutes /> : <AuthRoutes />;
 };
 
 export default Routes;

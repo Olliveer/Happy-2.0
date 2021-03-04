@@ -23,8 +23,8 @@ function OrphanagesMap() {
 
     function componentDidMount() {
         navigator.geolocation.getCurrentPosition(function (position) {
-            console.log("Latitude is :", setLatitude(position.coords.latitude));
-            console.log("Longitude is :", setLongitude(position.coords.longitude));
+            setLatitude(position.coords.latitude);
+            setLongitude(position.coords.longitude);
             setZoom(12);
         });
     }
