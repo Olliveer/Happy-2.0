@@ -46,7 +46,6 @@ export const AuthProvider: React.FC = ({ children }) => {
 
         api.defaults.headers.Authorization = `Bearer ${response.data.token}`;
 
-        console.log('Response data ' + response.data.token);
         setToken(response.data.token);
         localStorage.setItem('web:token', response.data.token);
     }

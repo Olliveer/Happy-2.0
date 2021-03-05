@@ -20,14 +20,16 @@ export interface IUser {
 function User() {
     const history = useHistory();
     const [users, setUsers] = useState<IUser[]>([]);
+    const [refresh, setRefresh] = useState(0);
+
     const notify = () =>
-        showToast({ type: "info", message: 'Sem users' });
+        showToast({ type: "info", message: 'Não existem usuários cadastrados' });
 
     useEffect(() => {
         api.get('users').then(response => {
             setUsers(response.data);
         })
-    }, []);
+    }, [refresh]);
 
     const delAlert = (id: string) => {
         swal({
@@ -37,7 +39,7 @@ function User() {
             buttons: ['Não', 'Sim']
         }).then(res => {
             if (res) {
-                api.post(`user/delete/${id}`);
+                api.post(`user/delete/${id}`).then(() => setRefresh(refresh + 1));
                 swal({ text: 'Usuário deletado com sucesso', icon: 'success', timer: 2000 })
             } else {
                 history.push('/dashboard/users');
@@ -57,7 +59,7 @@ function User() {
                 <h1>Usuarios Cadastrados</h1>
 
                 <div className="cards-wrapper">
-                    {users?.map((user) => (
+                    {users.map((user) => (
                         <div className="card-container" key={user.id}>
                             <div className="img-container">
                                 <img src={placeHolder} alt="user-img" />
