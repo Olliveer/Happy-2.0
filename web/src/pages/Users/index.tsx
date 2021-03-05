@@ -58,27 +58,41 @@ function User() {
             <main className="content-wrapper">
                 <h1>Usuarios Cadastrados</h1>
 
-                <div className="cards-wrapper">
-                    {users.map((user) => (
-                        <div className="card-container" key={user.id}>
-                            <div className="img-container">
-                                <img src={placeHolder} alt="user-img" />
-                            </div>
-                            <div>
-                                <p>{user.name}</p>
-                                <p>{user.email}</p>
-                                <div>
-                                    <Link to={{ pathname: '/dashboard/user/edit', state: { user } }}                                    >
-                                        <FiEdit3 size={20} color="#15C3D6" />
-                                    </Link>
-                                    <button className="button-del-user" onClick={() => delAlert(user.id)}>
-                                        <FiTrash size={20} color="#ff9e9e" />
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                <table id="table">
+                    <thead>
+                        <tr>
+                            {/* <th>&nbsp;</th> */}
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Ações</th>
+                            {/* <th>&nbsp;</th> */}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {users.map((user) => (
+                            <tr key={user.id}>
+                                <td>
+                                    <div className="img-td">
+                                        <img className="img" src={placeHolder} alt="PlaceUser" />
+                                        <span>{user.name}</span>
+                                    </div>
+                                </td>
+                                <td>{user.email}</td>
+                                <td>
+                                    <div className="buttons-td">
+                                        <Link to={{ pathname: '/dashboard/user/edit', state: { user } }}                                    >
+                                            <FiEdit3 size={20} color="#15C3D6" />
+                                        </Link>
+                                        <button className="button-del-user" onClick={() => delAlert(user.id)}>
+                                            <FiTrash size={20} color="#ff9e9e" />
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+
             </main>
             <Link to="/dashboard/user/create" className="button-register">
                 <FiPlus size={32} color="#FFF" />
