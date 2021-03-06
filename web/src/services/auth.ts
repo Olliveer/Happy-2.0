@@ -11,5 +11,5 @@ export async function SignInService(email: string, password: string): Promise<Ax
   }
 
 export function signOut(): void {
-    localStorage.clear();
+    localStorage.removeItem('web:token');
 }

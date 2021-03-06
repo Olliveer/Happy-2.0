@@ -9,8 +9,6 @@ import Loader from 'react-loader-spinner';
 
 const Routes: React.FC = () => {
     const { signed, loading } = useAuth();
-    console.log('LOGIN? ', signed);
-    console.log('LOad? ', loading);
 
     if (loading) {
         return (

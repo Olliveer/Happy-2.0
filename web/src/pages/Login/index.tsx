@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import { FiArrowLeft } from 'react-icons/fi';
 import Loader from 'react-loader-spinner';
 import { Link, useHistory } from 'react-router-dom';
@@ -11,17 +11,34 @@ import './login.css';
 function SignIn() {
     const { goBack } = useHistory();
     const { signIn } = useAuth();
-
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [remindMe, setRemindMe] = useState(false);
     const [loading, setLoading] = useState(false);
+
+    const [isChecked, setIsChecked] = useState(false);
+
+    useEffect(() => {
+        if (localStorage.checkbox && localStorage.email !== "") {
+            setIsChecked(true);
+            setEmail(localStorage.email);
+            setPassword(localStorage.password);
+        }
+    }, [])
 
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
         setLoading(true);
+        if (isChecked && email !== '') {
+            localStorage.email = email;
+            localStorage.checkbox = isChecked;
+        }
+        if (!isChecked) {
+            localStorage.removeItem('checkbox')
+            localStorage.removeItem('email')
+        }
         signIn(email, password).catch(err => showToast({ type: "warn", message: err.response.data.message }))
         setLoading(false);
+
     }
 
     return (
@@ -61,7 +78,12 @@ function SignIn() {
                         </div>
                     </fieldset>
                     <div className="remember-me">
-                        <input id="checkbox" type="checkbox" onClick={() => setRemindMe(!remindMe)}></input>
+                        <input
+                            id="checkbox"
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={event => setIsChecked(event.target.checked)}
+                        />
                         <label htmlFor="remember">Lembrar-me</label>
 
                         <Link to="/recovery" className="forgot-password">
@@ -74,8 +96,8 @@ function SignIn() {
                             // <FiCheck size={24} color="#FFF" />
                             'Entrar'
                         ) : (
-                                <Loader type="Puff" color="#FFF" height={40} width={40} />
-                            )}
+                            <Loader type="Puff" color="#FFF" height={40} width={40} />
+                        )}
                     </button>
 
                 </form>
