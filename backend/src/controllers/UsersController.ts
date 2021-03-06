@@ -31,11 +31,11 @@ export default {
     const user = await userRepository.findOne({ email });
 
     if (!user) {
-      throw new AppError('User not found');
+      throw new AppError('Incorrect email or password');
     }
 
     if (!(await PasswordHash.checkHash(password, user.password))) {
-      throw new AppError('Invalid password');
+      throw new AppError('Incorrect email or password');
     }
 
     return res.json({

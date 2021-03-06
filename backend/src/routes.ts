@@ -15,8 +15,7 @@ process.on("unhandledRejection", (err) => console.error(err));
 // Views
 // Controllers
 
-//Sign In, Sign Up 
-
+//AUTH ROUTES
 routes.post("/login", UsersController.authenticate);
 routes.post("/forgot", UsersController.forgot);
 routes.post("/reset", UsersController.reset);
@@ -27,7 +26,7 @@ routes.get("/orphanages", OrphanagesController.index);
 
 
 
-
+//ADMIN ROUTES
 routes.use(auth);
 routes.post("/orphanage/delete/:id", OrphanagesController.delete);
 routes.get("/pending", OrphanagesController.indexPending);
