@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import api from '../../services/api';
+import { FiEdit3, FiPlus, FiTrash } from 'react-icons/fi';
+import { Link, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
-
+import Sidebar from '../../components/Sidebar';
+import placeHolder from '../../images/placeHolder.svg';
+import api from '../../services/api';
 import ToastAnimated, { showToast } from '../../utils/Toast/toast';
 import './users.css';
-import Sidebar from '../../components/Dashboard';
-import { Link, useHistory } from 'react-router-dom';
-import { FiEdit3, FiPlus, FiTrash } from 'react-icons/fi';
-
-import placeHolder from '../../images/placeHolder.svg';
 
 export interface IUser {
     id: string;

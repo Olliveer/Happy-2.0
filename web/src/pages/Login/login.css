@@ -69,17 +69,22 @@ form.login-form .input-block input {
 
 form.login-form .remember-me {
     display: flex;
-    font-size: 1rem;
-    justify-content: center;
-    align-items: center;
-    margin: 10px auto;
+    margin-top: 10px;
+    margin-bottom: 20px;
 }
 
-form.login-form .remember-me input {
-    width: 24px;
+form.login-form .links {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: auto;
+    margin-bottom: 20px;
+    width: 50%;
+}
+
+form.login-form input[type='checkbox'] {
+    width: 18px;
     height: 24px;
     background: #F5F8FA;
-    border: 1px solid #D3E2E5;
     box-sizing: border-box;
     border-radius: 8px;
 }
@@ -89,7 +94,7 @@ form.login-form .remember-me label {
     color: #8FA7B3;
     line-height: 22px;
     padding-left: 10px;
-    margin-right: 75px;
+    margin-right: 55px;
 }
 
 form.login-form .forgot-password {
@@ -140,3 +145,13 @@ form.login-form button.confirm-button:hover {
 #login-page .back-btn:hover {
     background: #96FEFF;
 }
+
+form.form-login input#checkbox {
+    width: 18px;
+    height: 24px;
+    background: #F5F8FA;
+
+    border: 1px solid #D3E2E5;
+    box-sizing: border-box;
+    border-radius: 8px;
+  }

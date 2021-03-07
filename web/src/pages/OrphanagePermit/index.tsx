@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { FiClock, FiInfo,FiXCircle,FiCheckCircle } from "react-icons/fi";
+import { FiCheckCircle, FiClock, FiInfo, FiXCircle } from "react-icons/fi";
 import { Map, Marker, TileLayer } from "react-leaflet";
 import { useHistory, useParams } from 'react-router-dom';
-
-
-import './orphanage-permit.css';
-import Sidebar from "../../components/Dashboard";
-import mapIcon from "../../utils/mapIcon";
+import Sidebar from "../../components/Sidebar";
 import api from "../../services/api";
+import mapIcon from "../../utils/mapIcon";
+import './orphanage-permit.css';
 
 interface Orphanage {
   latitude: number;

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import Sidebar from '../../components/Dashboard';
-
-import api from '../../services/api';
 import OrphanageCard from '../../components/OrphanageCard/OrphanageCard';
+import Sidebar from '../../components/Sidebar';
+import api from '../../services/api';
 import './pending-orphanages.css';
+
 
 interface Orphanage {
     id: number;
@@ -23,7 +23,7 @@ function PendingOrphanage() {
     }, []);
 
     return (
-        <div id="page-dashboard">
+        <div id="page-pending">
             <Sidebar />
 
             <main className="content-wrapper">

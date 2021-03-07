@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FiEdit3, FiMapPin, FiTrash } from 'react-icons/fi';
 import { Map, Marker, TileLayer } from 'react-leaflet';
 import { Link } from 'react-router-dom';
-import Sidebar from '../../components/Dashboard';
+import Sidebar from '../../components/Sidebar';
 import api from '../../services/api';
 import mapIcon from '../../utils/mapIcon';
 import ToastAnimated from '../../utils/Toast/toast';
@@ -29,8 +29,6 @@ export interface IOrphanage {
 
 const Dashboard: React.FC = () => {
     const [orphanages, setOrphanages] = useState<IOrphanage[]>([]);
-    // const notify = () =>
-    // showToast({ type: "success", message: `Bem vindo` });
     
     useEffect(() => {
         api.get('orphanages').then(response => {

@@ -1,13 +1,10 @@
 import React, { FormEvent, useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { useHistory } from "react-router-dom";
-import Sidebar from "../../components/Dashboard";
+import Sidebar from "../../components/Sidebar";
 import api from '../../services/api';
 import ToastAnimated, { showToast } from '../../utils/Toast/toast';
 import './register.css';
-
-
-
 
 export default function Register() {
     const history = useHistory();

@@ -21,7 +21,6 @@ function SignIn() {
         if (localStorage.checkbox && localStorage.email !== "") {
             setIsChecked(true);
             setEmail(localStorage.email);
-            setPassword(localStorage.password);
         }
     }, [])
 
@@ -84,11 +83,13 @@ function SignIn() {
                             checked={isChecked}
                             onChange={event => setIsChecked(event.target.checked)}
                         />
-                        <label htmlFor="remember">Lembrar-me</label>
+                        <label htmlFor="checkbox">Lembrar-me</label>
 
-                        <Link to="/recovery" className="forgot-password">
-                            Esqueci a senha
-						</Link>
+                        <div className="links">
+                            <Link to="/recovery" className="forgot-password">
+                                Esqueci a senha
+						    </Link>
+                        </div>
                     </div>
 
                     <button disabled={false} className="confirm-button" type="submit">

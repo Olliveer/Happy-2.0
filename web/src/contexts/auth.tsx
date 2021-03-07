@@ -33,11 +33,11 @@ export const AuthProvider: React.FC = ({ children }) => {
 
             if (storageToken) {
                 api.defaults.headers.Authorization = `Bearer ${storageToken}`;
-                setToken(storageToken);                
-                
+                setToken(storageToken);
+
             }
             setLoading(false);
-        }        
+        }
         loadStorageData();
     }, []);
 

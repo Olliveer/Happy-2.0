@@ -1,10 +1,12 @@
+import { motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import { FiArrowRight, FiPlus } from 'react-icons/fi';
 import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../contexts/auth';
+import mapMarkerImg from '../../images/map-marker.svg';
 import api from '../../services/api';
 import mapIcon from '../../utils/mapIcon';
-import mapMarkerImg from '../../images/map-marker.svg';
 import './orphanage-map.css';
 
 interface Orphanage {
@@ -16,6 +18,7 @@ interface Orphanage {
 
 
 function OrphanagesMap() {
+    const { signed } = useAuth();
     const [orphanages, setOrphanages] = useState<Orphanage[]>([]);
     const [latitude, setLatitude] = useState(-25.4947402)
     const [longitude, setLongitude] = useState(-49.4298831)
@@ -36,24 +39,42 @@ function OrphanagesMap() {
         componentDidMount();
     }, [])
 
-
-
     return (
         <div id="page-map">
             <aside>
                 <header>
+
                     <Link to="/">
-                        <img src={mapMarkerImg} alt="Happy" />
+                        <motion.img
+                            animate={{ scale: [1, 1.5, 1.5, 1] }}
+                            transition={{ duration: 0.8 }}
+                            src={mapMarkerImg}
+                            alt="Happy"
+                        />
                     </Link>
+
 
                     <h2>Escolha um orfanato no mapa</h2>
                     <p>Muitas crianças estão esperando a sua visita :)</p>
                 </header>
 
-                <footer>
-                    <strong>Curitiba</strong>
-                    <span>Paraná</span>
-                </footer>
+                {!signed ? (
+                    <footer>
+                        <strong>Curitiba</strong>
+                        <span>Paraná</span>
+                    </footer>
+                ) : (
+                    <>
+                        <footer>
+                            <strong>Curitiba</strong>
+                            <span>Paraná</span>
+                        </footer>
+                        <Link to="/" className="enter-login">
+                            <strong>Área restrita</strong>
+                        </Link>
+                    </>
+                )}
+
             </aside>
 
             <Map
@@ -82,6 +103,7 @@ function OrphanagesMap() {
 
                             </Popup>
                         </Marker>
+
                     )
                 })}
             </Map>

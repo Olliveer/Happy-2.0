@@ -1,18 +1,15 @@
 import React, { FormEvent, useState } from "react";
 import Loader from "react-loader-spinner";
 import { useHistory } from "react-router-dom";
-import Sidebar from "../../components/Dashboard";
+import Sidebar from "../../components/Sidebar";
 import api from '../../services/api';
 import ToastAnimated, { showToast } from '../../utils/Toast/toast';
 import { IUser } from '../Users';
 import './user-edit.css';
 
-
-
 interface User {
     user: IUser
 }
-
 
 export default function UserEdit() {
     const history = useHistory();

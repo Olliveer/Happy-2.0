@@ -1,17 +1,15 @@
+import { LeafletMouseEvent } from "leaflet";
 import React, { ChangeEvent, FormEvent, ReactNode, useState } from "react";
 import { FiPlus, FiX } from "react-icons/fi";
 import { Map, Marker, TileLayer } from "react-leaflet";
-import { useHistory } from 'react-router-dom';
-import { LeafletMouseEvent } from "leaflet";
-
-import './edit-orphanage.css';
-import Sidebar from "../../components/Dashboard";
-import mapIcon from "../../utils/mapIcon";
-import api from "../../services/api";
-
-import { IOrphanage, IOrphanageImages } from '../../pages/Dashboard/index';
 import Loader from "react-loader-spinner";
+import { useHistory } from 'react-router-dom';
+import Sidebar from "../../components/Sidebar";
+import { IOrphanage, IOrphanageImages } from '../../pages/Dashboard/index';
+import api from "../../services/api";
+import mapIcon from "../../utils/mapIcon";
 import { showToast } from "../../utils/Toast/toast";
+import './edit-orphanage.css';
 
 interface IOrphanageProps {
     orphanage: IOrphanage;
