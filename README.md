@@ -10,7 +10,6 @@
   <img src="https://i.imgur.com/2UJUZYI.png" alt="Logo Happy" width="1000px" />
 </h1>
 
-
 ## 📌 Index
 
 - [Sobre o projeto](#-sobre-o-projeto)
@@ -20,13 +19,11 @@
 - [Contribuições](#-contribuições)
 - [License](#-license)
 
-
 ## ❔ Sobre o projeto
 
 Plataforma para vizitação de orfanatos com intuito de levar alegria para crianças.
 
 O projeto está em desenvolvimento na [Next Level Week 3](https://nextlevelweek.com/episodios/omnistack/1/edicao/3)
-
 
 ## 📸 Screenshots
 
@@ -56,8 +53,26 @@ This project was developed using the following technologies:
 - [SQLite](https://www.sqlite.org/index.html)
 - [Nunjucks](https://mozilla.github.io/nunjucks/)
 - [Expo](https://expo.io/)
+- [Framer](https://www.framer.com/motion/)
+- [Mapbox](https://www.mapbox.com/)
+
+---
+
+## Versão 2.0
+
+[Desafio Happy 2.0](https://github.com/Olliveer/Happy-2.0)
+
+## :hammer_and_wrench: New Features
+
+- [x] Autenticação JWT.
+- [x] Admin area.
+- [x] Aceitar ou recusar orfanato cadastro.
+- [x] Atualização/remoção de orfanatos.
+- [x] Upload/remoção de imagens do orfanto via AWS S3.
+- [x] Painel de usuários(CRUD).
 
 ## ⚙ Instalação e Start
+
 ```bash
 # Clone this repository
 $ git clone https://github.com/Olliveer/Happy.git
@@ -111,8 +126,11 @@ $ yarn install
 $ yarn start
 
 ```
-## 🤝 Contribuições
 
 ## 📜 License
 
-O projeto está sobre a licença [MIT](./LICENSE) 
+O projeto está sobre a licença [MIT](./LICENSE)
+
+---
+
+[![image](https://img.shields.io/badge/😎%20José%20Oliveira,%202021-LinkedIn-29B6D1?style=flat-square)](https://www.linkedin.com/in/joseooliveira/)
