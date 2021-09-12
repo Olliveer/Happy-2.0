@@ -73,7 +73,6 @@ This project was developed using the following technologies:
 - [Node.js](https://nodejs.org/en/)
 - [Express](https://expressjs.com/pt-br/)
 - [SQLite](https://www.sqlite.org/index.html)
-- [Nunjucks](https://mozilla.github.io/nunjucks/)
 - [Expo](https://expo.io/)
 - [Framer](https://www.framer.com/motion/)
 - [Mapbox](https://www.mapbox.com/)
