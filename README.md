@@ -28,18 +28,40 @@ O projeto está em desenvolvimento na [Next Level Week 3](https://nextlevelweek.
 ## 📸 Screenshots
 
 <h1 align="center">
-  <img src="https://i.imgur.com/UlxSdWa.png" alt="Logo Happy" width="1000px" />
+  <img src=".github/4.png" alt="Logo Happy" width="1000px" />
 </h1>
 
 <h1 align="center">
-  <img src="https://i.imgur.com/50kEJZB.png alt="Logo Happy" width="1000px" />
+  <img src=".github/1.png" alt="Logo Happy" width="1000px" />
+</h1>
+
+<h1 align="center">
+  <img src=".github/2.png" alt="Logo Happy" width="1000px" />
+</h1>
+
+<h1 align="center">
+  <img src=".github/3.png" alt="Logo Happy" width="1000px" />
 </h1>
 
 ## 🍃 Rotas do Backend
 
-GET - http://localhost:3333/orphanages --> Lista orfanatos <br>
-GET - http://localhost:3333/orphanages/:id --> Lista um orfanato<br>
-POST - https://localhost:3333/orphanages --> Cadastra orfanato<br>
+| METHOD | ROUTE                            | DESCRIPTION                          |
+| ------ | -------------------------------- | ------------------------------------ |
+| GET    | ${YOUR_API}/orphanages           | index orphanages                     |
+| GET    | ${YOUR_API}/orphanages/:id       | show orphanage                       |
+| GET    | ${YOUR_API}/pending              | get orphanages waiting for acception |
+| GET    | ${YOUR_API}/users                | index users                          |
+| GET    | ${YOUR_API}/users/:id            | show user                            |
+| POST   | ${YOUR_API}/login                | authentication                       |
+| POST   | ${YOUR_API}/forgot               | request new password by email        |
+| POST   | ${YOUR_API}/reset                | reset password                       |
+| POST   | ${YOUR_API}/orphanages           | create orphanage                     |
+| POST   | ${YOUR_API}/register             | create user                          |
+| PUT    | ${YOUR_API}/pending/:id          | update orphanage status              |
+| PUT    | ${YOUR_API}/orphanage/edit       | update orphanage info                |
+| PUT    | ${YOUR_API}/user                 | update user info                     |
+| DELETE | ${YOUR_API}/orphanage/delete/:id | delete orphanage                     |
+| DELETE | ${YOUR_API}/user/delete/:id      | delete user                          |
 
 ## 🛠 Techs
 
